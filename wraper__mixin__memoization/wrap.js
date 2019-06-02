@@ -56,9 +56,9 @@
 //     wrapped: wrapped.length,
 // before: before.length,
 // });
-
+//
 // function.length vs arguments.length
-
+//
 // const sum = (...args) => {
 //     console.log(args);
 //     console.log(arguments.length);
@@ -66,16 +66,16 @@
 // };
 //
 // sum(3, 78, 906, 100);
-//
-// // function.length - кол-во аргументов, ожидаемых функцией
-// // arguments.length - кол-во фргументов, поступувших в функцию
 
-// // Функция -обертка универсальная для функции с колбеком и без,
+// function.length - кол-во аргументов, ожидаемых функцией
+// arguments.length - кол-во фргументов, поступувших в функцию
+
+// Функция -обертка универсальная для функции с колбеком и без,
 // для асинхронной и синхорнной функции
-
-//здесь представлен чисто принцип универсальной функции-обертки,
-//а не ее рабочая программа.
-
+//
+// здесь представлен чисто принцип универсальной функции-обертки,
+// а не ее рабочая программа.
+//
 // Тимур назвал ее Асинхронная обертка или обертка с колбеками
 
 
@@ -255,7 +255,7 @@
 //     fn200('second2'); // новый запуск сработает
 // }, 150);
 
-//Обертка-таймер асинхронная для функции с колбеком - ДЗ 1
+//Обертка-таймер асинхронная для функции с колбеком - ДЗ 1 СДЕЛАНО
 
 // const timeout = (msec, fn) => {
 //     let timer = setTimeout(() => {
@@ -263,28 +263,45 @@
 //         timer = null;
 //     }, msec);
 //     return (...args) => {
+//         console.log('args до колбека  ' + args);
 //         if (timer) {
 //             clearTimeout(timer);
 //             timer = null;
-//             return fn(...args);
+//
+//             if (args.length > 0) {
+//                 const callback = args[args.length - 1];
+//                 console.log('callback.toString()  ' + callback.toString());
+//
+//                 if (typeof callback === 'function') {
+//                     const mas = args.slice(0, args.length - 1);
+//                     const z = mas => {
+//                         console.log('mas ' + mas);
+//                         return callback(...mas);
+//                     };
+//                     args[args.length - 1] = z(mas);
+//                     console.log('args[args.length - 1]  ' + args[args.length - 1]);
+//                 }
+//             }
+//             console.log('args после колбека  ' + args);
+//             return fn(args);
 //         }
 //     };
 // };
 //
 // const fn = (par, callback) => {
 //     console.log('Function called: ', par);
-//     callback(null, par);
 // };
 //
 // const fn100 = timeout(100, fn);
 // const fn200 = timeout(200, fn);
 //
 // setTimeout(() => {
-//     fn100('first', (err, data) => {
+//     fn100('first', (data) => {
 //         console.log('Callback first', data);
 //     });
-//     fn200('second', (err, data) => {
+//     fn200('second', (data) => {
 //         console.log('Callback second', data);
+//         return 'Callback second' + data;
 //     });
 // }, 150);
 
@@ -351,7 +368,7 @@
 // Обертка с методами
 // ДЗ 2 - написать метод wrapped.resue - отменяющий действие cancel
 // и добавить его сюда
-
+//
 // const wrap = fn => {
 //     let limit = 0; // если 0 - значит нет ограничении по
 //                     // количеству вызова функции fn
@@ -444,6 +461,233 @@
     // setTimeout(() => {
     //     clearInterval(timer);
     // }, 2000);
+
+
+// // Обертка с методами
+// // ДЗ 2 - написать метод wrapped.resue - отменяющий действие cancel
+// // и добавить его сюда   СДЕЛАНО_1, но СДЕЛАНО_2 лучше.
+//
+// const wrap = fn => {
+//     let limit = 0; // если 0 - значит нет ограничении по
+//     // количеству вызова функции fn
+//     let counter = 0; // сколько раз вызвали fn
+//     let res;
+//     let p = false;
+//     let t = false;
+//
+//     const wrapper = (...args) => {
+//
+//         if (limit && counter === limit) wrapper.cancel(); // приоритет у === выше
+//         if (p) {
+//             res = undefined;
+//         } else {
+//             res = fn(...args);
+//             counter++;
+//         }
+//             return res;
+//         };
+//
+//
+//     wrapper.cancel = () => {
+//         p = true;
+//         return wrapper;
+//     };
+//
+//     wrapper.timeout = msec => {
+//         setTimeout(() => {
+//             wrapper.cancel();
+//             t = true;
+//         }, msec);
+//         return wrapper;
+//     };
+//
+//     wrapper.limit = count => {
+//         limit = count;
+//         return wrapper;
+//     };
+//
+//     wrapper.resume = () => {
+//         (t) ? p = true : p = false;
+//         return wrapper;
+//     };
+//
+//     return wrapper;
+// };
+//
+// const fn = par => {
+//     console.log('Function called, par: ', par);
+// };
+//
+// const f = wrap(fn).timeout(130).limit(0);
+// f('1st');
+//
+// setTimeout(() => {
+//     f('2nd');
+//     f('3nd');
+//     f.cancel();
+//     f('4th');
+//     f.resume();
+//     f('5th');
+// }, 200);
+
+
+// Обертка с методами
+// ДЗ 2 - написать метод wrapped.resume - отменяющий действие cancel
+// и добавить его сюда   СДЕЛАНО_2 лучше
+
+// const wrap = fn => {
+//     let limit = 0; // если 0 - значит нет ограничении по
+//     // количеству вызова функции fn
+//     let counter = 0; // сколько раз вызвали fn
+//     let func = fn;
+//
+//     const wrapper = (...args) => {
+//         if (!fn) {console.log('jjjj'); return;}       //просто выход из функции
+//         if (limit && counter === limit) wrapper.cancel(); // приоритет у === выше
+//         else {
+//             const res = fn(...args);
+//             counter++;
+//             return res;
+//         }
+//     };
+//
+//     wrapper.cancel = () => {
+//         fn = null;
+//         return wrapper;
+//     };
+//
+//     wrapper.timeout = msec => {
+//         setTimeout(() => {
+//             wrapper.cancel();
+//             func = null;
+//         }, msec);
+//         return wrapper;
+//     };
+//
+//     wrapper.limit = count => {
+//         limit = count;
+//         return wrapper;
+//     };
+//
+//     wrapper.resume = () => {
+//        fn = func;
+//        return wrapper;
+//     };
+//
+//     return wrapper;
+// };
+//
+// const fn = par => {
+//     console.log('Function called, par: ', par);
+// };
+//
+// const f = wrap(fn).timeout(160).limit(4);
+// f('1st');
+//
+// setTimeout(() => {
+//     f('2nd');
+//     f('3nd');
+//     // f.cancel();
+//     f.resume();
+//     f('4th');
+//     f('5th');
+// }, 2000);
+
+//
+
+const wrap = func => {
+    let limit = 0;
+    let counter = 0;
+    let timer = null;
+    let fn = func;
+
+    const wrapper = (...args) => {
+        console.dir({ limit, counter, fn, args });
+        if (!fn) {
+            console.log('fn = null уже!');
+            return;
+        }
+        if (limit && counter === limit) {
+            console.log('Закончился лимит вызовов');
+            limit = 0;
+            counter = 0;
+            wrapper.cancel();
+            return;
+        }
+    const res = fn(...args);
+    counter++;
+    return res;
+    };
+
+    const methods = {
+        cancel() {
+            fn = null;
+            return this;
+        },
+        resume() {
+            if (!fn) fn = func;
+            return this;
+        },
+        timeout(msec) {
+            if (timer) clearTimeout(timer);
+            timer = setTimeout(() => this.cancel(), msec);
+            return this;
+        },
+        limit(count) {
+            limit = count || 0;
+            counter = 0;
+            return this;
+        },
+    };
+
+    return Object.assign(wrapper, methods);
+};
+
+const fn = par => {
+    console.log('Function called, par:', par);
+};
+
+const f = wrap(fn).timeout(200).limit(3);
+f('1st');
+
+setTimeout(() => {
+    f('2nd');
+    f.cancel();
+    f('3rd');
+    f.resume();
+    f('4th');
+    f.timeout(200);
+    setTimeout(() => {
+        f('5th');
+        setTimeout(() => {
+            f.limit(1);
+            f('6th'); /* при 5th limit: 3, counter: 3, -применили cancel() - fn = null;
+             на момент 6th fn все также оставалась null и не было resue что могла б
+            востановить ссылку fn а counter=1, limit =0; */
+
+            f('7th');
+            f.resume();
+            f('8th'); /* из-за того что функция fn так и не выполнялась то и counter
+              не увеличился и потому к моменту 8 th сохранились counter=1, limit =0; */
+        }, 150);
+    }, 150);
+}, 150);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
