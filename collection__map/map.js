@@ -152,7 +152,70 @@
 // const record = byPopulation.get('21516000');
 // console.log(record);
 
+// Weakmap
+
+// const cities = {
+//     beijing: {name: 'Beijing'},
+//     kiev: { name: 'Kiev' },
+//     london: { name: 'London' },
+//     baghdad: { name: 'Baghdad' },
+// };
 //
+// const capitalOf = new WeakMap();
+// capitalOf.set(cities.beijing, 'People\'s Republic of China');
+// capitalOf.set(cities.kiev, 'Ukraine');
+// capitalOf.set(cities.london, 'United Kingdom');
+// capitalOf.set(cities.baghdad, 'Iraq');
+//
+// const n = cities.london;
+//
+// delete cities.london;      // Ключ Лондона удалили из объекта cities
+//
+// console.dir({ cities, capitalOf }); /* т.к. ссылки на ключи - объекты jS слабые
+//   - нет метода что возвращает список (массив) ключей, нет метода что может
+//   итерироваться по weak map, не выводится в консоль содержимое weak map. */
+//
+// console.dir(capitalOf.get(cities.london));  /* Мы удалили ключ Лондона только
+// из объекта ключей cities, но не из weakMap. Однако, ключ удалился и из weakMap т.к.
+// в weakMap ссылки на ключи - объекты jS хранятся слабо,
+// и они смогут предотвратить сборку мусора, только в том случае,
+//    если будут другие ссылки на эти ключи - объекты jS. */
+//
+// console.dir(capitalOf.get(n)); /* если мы где-то сохраняем ссылку на объект JS,
+// то тогда из weak map пара ключ-значение не удалится */
+
+
+
+
+
+// const cities = {
+//     beijing: {name: 'Beijing'},
+//     kiev: { name: 'Kiev' },
+//     london: { name: 'London' },
+//     baghdad: { name: 'Baghdad' },
+// };
+//
+// const capitalOf = new Map();
+// capitalOf.set(cities.beijing, 'People\'s Republic of China');
+// capitalOf.set(cities.kiev, 'Ukraine');
+// capitalOf.set(cities.london, 'United Kingdom');
+// capitalOf.set(cities.baghdad, 'Iraq');
+//
+// delete cities.london;      // Ключ Лондона удалили из объекта cities
+//
+// console.dir({ cities, capitalOf }); /* т.к. ссылки на ключи - объекты jS слабые
+//   - нет метода что возвращает список (массив) ключей, нет метода что может
+//   итерироваться по weak map, не выводится в консоль содержимое weak map. */
+//
+// console.dir(capitalOf.get(cities.london));  /* Мы удалили ключ Лондона только
+// из объекта ключей cities, но не из weakMap. Однако, ключ удалился и из weakMap т.к.
+// в weakMap ссылки на ключи - объекты jS хранятся слабо,
+// и они смогут предотвратить сборку мусора, только в том случае,
+//    если будут другие ссылки на эти ключи - объекты jS. */
+//
+// console.dir(capitalOf.{ name: 'Beijing' });
+// // console.dir(capitalOf.get(n)); /* если мы где-то сохраняем ссылку на объект JS,
+// // то тогда из weak map пара ключ-значение не удалится */
 
 
 
