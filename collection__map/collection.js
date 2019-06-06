@@ -55,25 +55,25 @@
 
 // Итерация for-in-object и с помощью Object.keys(объект)
 
-// const sim = Symbol('nord');
-//
-// const obj = {
-//     key1: 'lll',
-//     key2: 'kkkk',
-//     [Symbol('nord')]: 'nord1', // по ключам символьного
-//     [Symbol('nord')]: 'nord2',  // типа данных нельзя итерироваться
-// };
-//
-// for (const key in obj) {
-//     let value = obj[key];
-//     console.log(key + ':' + value);
-// }
-//
-// const mas = Object.keys(obj);
-// for (const key of mas) {
-//     let value = obj[key];
-//     console.log(key + ':' + value);
-// }
+const sim = Symbol('nord');
+
+const obj = {
+    key1: 'lll',
+    key2: 'kkkk',
+    [Symbol('nord')]: 'nord1', // по ключам символьного
+    [Symbol('nord')]: 'nord2',  // типа данных нельзя итерироваться
+};
+
+for (const key in obj) {
+    let value = obj[key];
+    console.log(key + ':' + value);
+}
+
+const mas = Object.keys(obj);
+for (const key of mas) {
+    let value = obj[key];
+    console.log(key + ':' + value);
+}
 
 // Запись объекта в файл
 

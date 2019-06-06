@@ -79,7 +79,8 @@
 // cityPopulation.set('Beijing',  21516000);
 // cityPopulation.set('Delhi',    16787941);
 // cityPopulation.set('Lagos',    16060303);
-
+// // cityPopulation.set('Lagos',    16060304); // В мапе как и в объекте значения перетираются
+//
 // cityPopulation.delete('Shanghai');
 //
 // if (cityPopulation.has('Beijing')) {
@@ -89,10 +90,10 @@
 // if (!cityPopulation.has('Shanghai')) {
 //     console.log('no data for Shanghai');
 // }
-
+//
 // console.log('size:', cityPopulation.size);
 // console.log('keys:', [...cityPopulation.keys()]);
-
+//
 // console.log('\nValues');
 // console.log(cityPopulation.values()); //экземпляр итератора по значениям
 //
