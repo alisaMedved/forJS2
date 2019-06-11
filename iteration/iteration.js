@@ -395,6 +395,37 @@
 //     console.log(num);
 // }
 
+// // Асинхронный итератор
+//
+// const range = {
+//     start: 1,
+//     end: 10,
+//     [Symbol.asyncIterator]() {            // Символьное свойство задающее
+//                              // асинхронный итератор объекта, используемый по умолчанию
+//         let value = this.start;
+//         return {                    // асинхронный Итератор
+//             next: () => Promise.resolve({  // метод next возвращает не объект,
+//                 value,                           // а обещание объекта - Promise
+//                 done: value++ === this.end +1     // вообще сейчас наш асинхронный итератор ведет себя
+//                                                 // как синхронный, ему не хватает setTimeout() и т.п.
+//             })
+//         };
+//     }
+// };
+//
+// console.log(Object.getOwnPropertyNames(range));   // массив всех строковых ключей
+// console.log(Object.getOwnPropertySymbols(range));   // массив всех символьных свойств
+//
+// (async () => {
+//     for await (const number of range) {  // конструкция для асинхронного итератора
+//         console.log(number)
+//     }
+// })();
+
+
+
+
+
 
 
 
