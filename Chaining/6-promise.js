@@ -68,3 +68,5 @@ class ArrayChain {
 module.exports = {
     for: array => new ArrayChain(array) // создаем объект с полем промис на основе массива
 };
+
+/* Промис возвращает промис со всеми методами */
