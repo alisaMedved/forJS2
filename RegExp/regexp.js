@@ -50,7 +50,7 @@
 // const st82 = '380661234567';
 // console.log(st8.match(rx8), st81.match(rx8), st82.match(rx8));
 //
-// const rx9 = /[0-9]+ (hours|days|year)/g;   // либо hours либо days либо year
+// const rx9 = /[0-9]+ (hours|days|year)/g;   // либо hours либо days либо year - () - группа
 // const st9 = '5 days 8 hours 8 year 9 century';
 // console.log(st9.match(rx9));
 //
@@ -110,6 +110,86 @@
 //     res = rx.exec(s);
 //     console.log({ lastIndex: rx.lastIndex, res});
 // } while (res);
+
+// РВ сопоставления электронной почты
+//
+// const s = 'Hello <User1@domain.> and user2@domain.com';
+//
+// const rx = /[a-zA-Z0-9]+@[a-zA-Z]+\.[a-zA-Z]+/gi;
+// console.dir(s.match(rx));
+
+// Метод строки replace в качестве аргумента-шаблона принимает РВ
+// Пример 1
+
+// const s = 'POp lkoi olk';
+// const s1 = ' ';
+// const rx1 = /\s/g;
+// const rx2 = /\s/;
+// console.log(s.replace(s1, '____'));   // при шаблоне-строке будет заменено только первое вхождение
+// console.log(s.replace(rx1, '____'));  // при шаблоне-РВ с флагом g будут заменены все сопоставления
+// console.log(s.replace(rx2, '____')); // при шаблоне-РВ без флага g будет заменено только первое сопаставление
+
+// Парсер переводит строку в массив уникальных слов написанных маленькими буквами
+// Создаем парсер с помощью рег выражений и методов строк
+
+// const words = s => [...new Set(s
+//     .toLowerCase()
+//     .replace(/\W+/g, ' ')
+//     .trim()
+//     .split(/\s/)             // а вот для split не нужен флаг g
+// )];
+//
+// const s = 'Hello World, here we are!';
+// console.dir(words(s));
+// console.dir(words(s + s));
+
+// Метод строки replace в качестве аргумента-шаблона принимает РВ
+// Пример 2
+
+// const rx1 = /abc/g;
+// const s11 = 'abcdefg';
+// const s12 = s11.replace(rx1, '123');
+// console.log(s12);
+//
+// const rx2 = new RegExp('abc', 'gi');  // Еще один способ создавать РВ
+// const s21 = 'abcdefgABCDEFG';
+// const s22 = s21.replace(rx2, '789');
+// console.log(s22);
+
+// Метод строки replace с аргументом-шаблоном РВ и с аргументом-заменителем функцией
+// Пример 3
+//
+// const rx = /(abc)(defg)/g;
+// const s = 'abcdefgAbC';
+// const res = s.replace(rx, (sub, p1, p2, pos, str) => {
+//     console.dir({sub, pos, str, p1, p2});
+//     return sub.toUpperCase();
+// });
+//
+// console.log(res);
+//
+// /*
+// sub - сопоставившаяся подстрока в строке
+// p1, p2 - сопоставившиеся группы в РВ,
+// pos - индекс первого символа сопоставившейся подстроки в строке,
+// str - строка
+//  */
+
+// Метод String search
+//
+// const rx1 = /def/g;
+// const s1 = 'abcdefgabc';
+// const res1 = s1.search(rx1);
+// console.log(res1);
+//
+// const rx2 = /cba/g;
+// const s2 = 'abcdefgabc';
+// const res2 = s2.search(rx2);
+// console.log(res2);
+
+
+
+
 
 
 
