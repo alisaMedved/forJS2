@@ -187,8 +187,36 @@
 // const res2 = s2.search(rx2);
 // console.log(res2);
 
+// const str = 'hg7.098';
+// const strT = 'hg7.98';
+// const strS = '.9';
+// // const rx = /\.9/gi;
+//
+//
+//
+// const rx = new RegExp(\ + `${strS}`');
+// // const rx = new RegExp(strS);
+// console.log(rx.test(str));
+// console.log(rx.test(strT));
 
+// const str = "gh.jk";
+// str.
 
+const mas ='jk .g.f'.split("");
+console.log(mas);
+// const newI = mas.map(el => {
+//     if (el === '.')  {
+//         return  '\\.';
+//     } else {
+//         return el;
+//     }
+// });
+
+const newI = mas.map(el => el === '.' ? '\\.' : el);
+
+console.log(newI);
+
+console.log(newI.join(''));
 
 
 

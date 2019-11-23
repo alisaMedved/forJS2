@@ -7,14 +7,14 @@
 // // fn - функция проекции projection
 // // args - нужные нам поля
 //
-// const projection = (fields, obj) => Object.keys(obj)
-//     .filter(field => fields.includes(field))
-//     .reduce((hash, key) => (hash[key] = obj[key], hash), {});
-// // В arrow function нет return что просто последним идет то и возвращается - hash
-// // initialValue - {} - первый аргумент в первый вызов - то бишь hash
-// // При очередном поступлении ключа в reduce вновь hash приходит в аргументы,
-// // добавляет себе поля и вновь возвращается в виде рез-та колбека.
-// // Это не рекурсия - reduce массива построен на цикле
+const projection = (fields, obj) => Object.keys(obj)
+    .filter(field => fields.includes(field))
+    .reduce((hash, key) => (hash[key] = obj[key], hash), {});
+// В arrow function нет return что просто последним идет то и возвращается - hash
+// initialValue - {} - первый аргумент в первый вызов - то бишь hash
+// При очередном поступлении ключа в reduce вновь hash приходит в аргументы,
+// добавляет себе поля и вновь возвращается в виде рез-та колбека.
+// Это не рекурсия - reduce массива построен на цикле
 //
 // const persons = [
 //     { name: 'Marcus Aurelius', city: 'Rome', born: 121 },
