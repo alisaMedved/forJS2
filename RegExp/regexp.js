@@ -212,14 +212,22 @@ console.log(mas);
 //     }
 // });
 
-const newI = mas.map(el => el === '.' ? '\\.' : el);
+// const newI = mas.map(el => el === '.' ? '\\.' : el);
+//
+// console.log(newI);
+//
+// console.log(newI.join(''));
+//
+//
+//
+//
+// // лучше конструктор если регулярка будет изменяться
+//
+// const time = 1000240000000;
+// console.log(new Date(time));
+// const timeTo = 1586120400000;
+// console.log(new Date(timeTo));
 
-console.log(newI);
+console.log("http://localhost:8081/api/bregis/ui/manager/observations/zali/pathologies?from=1527800400000&to=1586936343877&organizations=[\"a1312369-5a99-46bf-bffa-a50304cb886b\", \"a1312369-5a99-46bf-bffa-a50304cb886b\"]&currentPage=1&pageSize=10&searchType=measurementName&searchValue=ЛПНП (холестерин липопротеидов низкой плотности) ЛПНП (холестерин липопротеидов низкой плотности) ЛПНП (холестерин липопротеидов низкой плотности) ЛПНП (холестерин липопротеидов низкой плотности)&sortType=measurementName&sortValue=cba".length);
 
-console.log(newI.join(''));
-
-
-
-
-
-
+console.log(new Date());

@@ -56,14 +56,14 @@
 
 // Делаем сеты и их операции на массивах (сами ручками велосипед создаем)
 
-// const union = (s1, s2) => {   // объединение
-//     const ds = s1.slice(0);
-//     for (let i = 0; i< s2.length; i++) {
-//         const item = s2[i];
-//         if (!ds.includes(item)) ds.push(item);
-//     }
-//     return ds;
-// };
+const union = (s1, s2) => {   // объединение
+    const ds = s1.slice(0);
+    for (let i = 0; i< s2.length; i++) {
+        const item = s2[i];
+        if (!ds.includes(item)) ds.push(item);
+    }
+    return ds;
+};
 //
 // const intersection = (s1, s2) => {  // пересечение
 //     const ds =[];

@@ -92,29 +92,29 @@
 
 // Обработка ошибок и результатов промисами
 
-// const sum = (a, b) => new Promise((resolve, reject) => {  // асинхронная ф-я воз-ет промис
-//     if (typeof a === 'number' && typeof b === 'number') {  // усл-ия выполнения колбеков
-//      resolve(a + b);                                       // аргумент resolve - результат асинх. функции
-//     } else {
-//         reject(new Error('a and b should be numbers'));
-//     }                                       // аргумент reject - причина по которой Promise был отклонен
-// });
-//
-// sum(2, 3)
-// .then(data => {   // навешиваем на промис метод, а не вызываем метод. then и catch навешиваются
-//     console.log(data);
-// })                          // then  вызовется когда промис выполнится - т.е. будет в состоянии fulfiled
-// .catch(err => {   // catch вызовется когда промис отклонен - т.е. будет в состоянии rejected
-//     console.log(err.message);
-// });
-//
-// sum(7, 'A')
-//     .then(data => {
-//         console.log(data);    // then содержит колбек промиса resolve и возвращает
-//     })
-//     .catch(err => {
-//         console.log(err.message);  // catch содержит колбек промиса reject
-//     });
+const sum = (a, b) => new Promise((resolve, reject) => {  // асинхронная ф-я воз-ет промис
+    if (typeof a === 'number' && typeof b === 'number') {  // усл-ия выполнения колбеков
+     resolve(a + b);                                       // аргумент resolve - результат асинх. функции
+    } else {
+        reject(new Error('a and b should be numbers'));
+    }                                       // аргумент reject - причина по которой Promise был отклонен
+});
+
+sum(2, 3)
+.then(data => {   // навешиваем на промис метод, а не вызываем метод. then и catch навешиваются
+    console.log(data);
+})                          // then  вызовется когда промис выполнится - т.е. будет в состоянии fulfiled
+.catch(err => {   // catch вызовется когда промис отклонен - т.е. будет в состоянии rejected
+    console.log(err.message);
+});
+
+sum(7, 'A')
+    .then(data => {
+        console.log(data);    // then содержит колбек промиса resolve и возвращает
+    })
+    .catch(err => {
+        console.log(err.message);  // catch содержит колбек промиса reject
+    });
 //
 // /*
 // Самое что замечательное в промисах это всюду чейнинг.
@@ -126,27 +126,46 @@
 // Обработка ошибки у асинхронной функции, определенной с помощью
 // async. Оператор await
 
-// const sum = async (a, b) => {                        // определяем ассинхронную функцию с помощью async
-//     // такая функция автоматом вернет нам промис
-//     if (typeof a === 'number' && typeof b === 'number') {
-//         return a + b;  // результат функции будет добавлен в промис с помощью resolve
-//     } else {
-//         throw new Error('a and b should be numbers');
-//     }     // исключение будет добавлено в промис с помощью reject
-// };
-//
-// (async () => {
-//
-//     try {
-//         console.log(await sum(2, 3));  // оператор await будет ждать окончания Promise
-//     } catch (e) {                            // и вернет значение полученное из Promise
-//         console.log(e.message);
-//     }
-//
-//     try {
-//         console.log(await sum(7, 'A'));
-//     } catch (err) {                           // из отклоненного промиса await вернет ошибку
-//         console.log(err.message);              // то переведет выполнение проги в блок catch
-//     }
-//
-// })();
+const sum = async (a, b) => {                        // определяем ассинхронную функцию с помощью async
+    // такая функция автоматом вернет нам промис
+    if (typeof a === 'number' && typeof b === 'number') {
+        return a + b;  // результат функции будет добавлен в промис с помощью resolve
+    } else {
+        throw new Error('a and b should be numbers');
+    }     // исключение будет добавлено в промис с помощью reject
+};
+
+(async () => {
+
+    try {
+        console.log(await sum(2, 3));  // оператор await будет ждать окончания Promise
+    } catch (e) {                            // и вернет значение полученное из Promise
+        console.log(e.message);
+    }
+
+    try {
+        console.log(await sum(7, 'A'));
+    } catch (err) {                           // из отклоненного промиса await вернет ошибку
+        console.log(err.message);              // то переведет выполнение проги в блок catch
+    }
+
+})();
+
+
+const sum = (a, b) => new Promise((resolve, reject) => {
+    if (typeof a === 'number' && typeof b === 'number') {
+        resolve(a + b);
+    } else {
+        reject(new Error('a and b should be numbers'));
+    }
+});
+
+sum(4, 6)
+    .then((data) => {
+        console.log(data);
+    })
+    .catch((error) => {
+        console.log(error.message);
+
+    });
+// console.log(sum(7, 8));

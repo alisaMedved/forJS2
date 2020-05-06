@@ -168,11 +168,13 @@
 //
 // console.log(text);
 
+console.log('https://bs.bregis.ru/api/bregis/ui/apiroutes/routes/rule/5d3679e7-cca5-4fe6-8d7e-4869a2310d77?destination-icmid=4b888b04-6b22-496a-acb6-8f43850d3769&currentPage=600&pageSize=10&searchType=name&sortType=name&sortValue=abc&searchValue='.length);
 
 
+console.log('sdfghjkl;,mnbvcsewrtyuioplkfdsasdfghjkl;. cxsqwertyuiop[kjhgfdsaqwopkjhgfdsaячсмитьбжщшгнекуцйфывапролдтимсч'.length);
+
+console.log('https://bs.bregis.ru/api/bregis/ui/integrationterms/matching?source=d6b9a2e8-14c7-4322-a795-a8609452240f&destination=1ec774e9-6f08-4714-8239-2479ea3ba4fc&termType=services&currentPage=1&pageSize=10&searchType=sourceName&searchValue=Кровь&sortType=sourceName&sortValue=abc'.length);
 
 
-
-
-
-
+const sesTimeNum = parseInt("", 10);
+console.log(sesTimeNum);
