@@ -177,4 +177,6 @@ console.log('https://bs.bregis.ru/api/bregis/ui/integrationterms/matching?source
 
 
 const sesTimeNum = parseInt("", 10);
-console.log(sesTimeNum);
+console.log(new Date().toISOString().slice(0, -1));
+console.log(0 % 2);
+console.log(5 % 2);
