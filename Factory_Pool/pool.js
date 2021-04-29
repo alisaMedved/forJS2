@@ -15,9 +15,9 @@
 //     console.log('Get from pool, count =', pool.items.length);
 //     return res;
 // };
-//
-// // Usage
-//
+// //
+// // // Usage
+// //
 // const a1 = pool();
 // const b1 = a1.map((x, i) => i).reduce((x, y) => x + y);
 // console.log(b1);
@@ -41,7 +41,7 @@
 // Более абстрактный пул.
 // Pool абстрагированный от отдельного класса и от фабрики
 // за счет пулифицирования фабрики
-
+//
 // const poolify = (factory, size) => {           // функция возвращающая пул
 //     const items = new Array(size).fill(null).map(() => factory());
 //     // элементы пула - массив элементов фабрики
@@ -137,7 +137,9 @@
 //     let allocated = norm;                                //  allocated - кол-во созданных пулом эл-тов
 // const items = duplicate(factory, norm);
 // const delayed = [];                          // delayed - очередь запросов на выдачу элемента (FIFO),
+//
 //     return par => {
+//
 //         if (typeof par !== 'function') {           // если par - это эл-т в пул
 //             if (items.length < max) {             // пул не возьмет эл-тов больше чем создал иначе return
 //                 const request = delayed.shift();                //
@@ -165,10 +167,10 @@
 //         const res = items.pop();
 //         const c2 = items.length;
 //         if (res) {
-//            console.log(`{c1}->${c2} Выдаем элемент колбеку`)
+//            console.log(`${c1}->${c2} Выдаем элемент колбеку`)
 //             par(res);
 //         } else {
-//             console.log(`{c1}->${c2} Кол-во элементов в пуле = 0, Запрос на выдачу эл-та передан в очередь`);
+//             console.log(`${c1}->${c2} Кол-во элементов в пуле = 0, Запрос на выдачу эл-та передан в очередь`);
 //            delayed.push(par);
 //         }
 //     };
@@ -191,7 +193,18 @@
 // };
 //
 // next();
+
+
+// заметка про двойной вызов функции
+
+// const func = (a) => {
+//     return b => {
+//         console.log(b);
+//     }
+// }
 //
+// func("meow")("ber");
+
 // /*
 // Пул ассинхронный потому что с колбеком par. При return res требуется выдать эл-т немедленно.
 // А колбеку можно выдать эл-т попозже.

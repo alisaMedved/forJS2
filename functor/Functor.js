@@ -1,17 +1,21 @@
 'use strict';
 
+// фуектор можно сделать из класса из мпрототипа из замыкания? Но из класса и прототипа функтор небезопасный
+// ведь к его значению может достучаться извне
+
+
 // функтор через прототип функции
 
 // function Maybe(x) {
 //     this.x = x;
 // }
-// // Maybe.prototype.map = function(fn) {
-// //     if (this.x && fn) {
-// //         return new Maybe(fn(this.x));
-// //     } else {
-// //         return new Maybe(null);
-// //     }
-// // };
+// Maybe.prototype.map = function(fn) {
+//     if (this.x && fn) {
+//         return new Maybe(fn(this.x));
+//     } else {
+//         return new Maybe(null);
+//     }
+// };
 // Maybe.prototype.map = function(fn) {
 //     return new Maybe(this.x && fn ? fn(this.x) : null);
 // };
@@ -22,9 +26,9 @@
 //
 // console.log(new Maybe(5).map());             // null
 // console.log(new Maybe(null).map(x => x * 2));   // null
-
-// функтор через рекурсивное замыкание
-
+//
+// // функтор через рекурсивное замыкание
+//
 // function maybe(x) {
 //     return function(fn) {
 //         if (x && fn) {
@@ -38,8 +42,10 @@
 // maybe(5)()(console.log);
 // maybe(5)(x => x*2)(x => ++ x)(console.log);
 
-// аппликативный функтор через прототип функции
+// а вот тут метода нет
 
+// аппликативный функтор через прототип функции
+//
 // Вообще в js существует apply - это метод прототипа функции (это динамический метод)
 // позволяет задать функции контекст this
 // коль название apply занято - мы назовем наш метод ap
@@ -67,13 +73,112 @@
 // };                                                      //не будет двойного оборачивания
 //
 // Maybe.prototype.ap = function(functor) {                // метод аппликативного функтора ap -
-//   return this.map(val => functor.map(f => f(val)));     // распаковывает функциюиз другого функтора
+//   return this.map(val => functor.map(f => f(val))
+//   );                                                    // распаковывает функциюиз другого функтора
 // };                                                      // и применяет ее к своему значению
+//
+// // добавили метод chain чтобы сделать монаду
+// Maybe.prototype.ch = function(fn) {
+//     return fn(this.x);
+// }
 //
 // const a = new Maybe(5);
 // const f1 = new Maybe(x => x * 2);
 // const f2 = new Maybe(x => ++x);
-// a.ap(f1).ap(f2).map(console.log);
+// const f3 = x => new Maybe(x + 3)
+// a.ap(f1).ap(f2).ch(f3).map(console.log);
+
+// применение монады
+
+// const maybe = x => {
+//     const map = fn => maybe(x ? fn(x) : null);
+//     map.ap = functor => functor(f => x && f ? f(x) : null);
+//     map.chain = fn => x ? fn(x) : null;
+//     return map;
+// };
+//
+// // Usage
+//
+// const config = {
+//     coords: {
+//         x: 0,
+//         y: 5,
+//     },
+//     velocity: {
+//         x: 1,
+//         y: 1,
+//     },
+// };
+//
+// const addVelocity = velocity => coords => {
+//     coords.x += velocity.x;
+//     coords.y += velocity.y;
+//     return coords;
+// };
+//
+// const coords = maybe(config.coords);
+// const velocity = maybe(config.velocity);
+//
+// coords.ap(velocity(addVelocity)).chain(console.log);
+
+// второй пример применения функтора
+
+// const fp = {};
+//
+// fp.path = data => (
+//     path => (
+//         fp.map(path)(path => (
+//             path.split('.').reduce(
+//                 (prev, key) => (prev[key] || {}),
+//                 (data || {})
+//             )
+//         ))
+//     )
+// );
+//
+// fp.map = x => fn => fp.map(x && fn ? fn(x) : null);
+//
+// // Usage
+//
+// const fs = require('fs');
+//
+// const config = {
+//     server: {
+//         host: {
+//             ip: '10.0.0.1',
+//             port: 3000
+//         },
+//         ssl: {
+//             key: {
+//                 filename: './7-path.js'
+//             }
+//         }
+//     }
+// };
+//
+// // Imperative style
+//
+// if (
+//     config &&
+//     config.server &&
+//     config.server.ssl &&
+//     config.server.ssl.key &&
+//     config.server.ssl.key.filename
+// ) {
+//     const fileName = config.server.ssl.key.filename;
+//     fs.readFile(fileName, 'utf8', (err, data) => {
+//         if (data) console.log();
+//     });
+// }
+//
+// // Functional style
+//
+// fp.path(config)('server.ssl.key.filename')(
+//     file => fs.readFile(file, 'utf8', (err, data) => {
+//         fp.map(data)(console.log);
+//     })
+// );
+
 
 /**
  Итак функтор - это абстрактная концепция - это функция хранящяя в себе значение
@@ -98,25 +203,26 @@
 
 // монада
 
-const fp = {};
+// const fp = {};
+//
+// fp.mapNull = (fn, x) => (x ? fn(x) : null);
+//
+// fp.maybe = x => {                                       // монада
+//     const map = fn => fp.maybe(fp.mapNull(fn, x));      // метод монады map для отображения через другие функции
+//     map.ap = fnA => fnA(fn => fp.mapNull(fn, x));       //для применения функции других функторов
+//     map.chain = fnM => fnM(x);                          // для постороения цепочек
+//     return map;
+// };
+//
+// fp.maybe(5)(x => x * 2)(x => ++x)(console.log);
+// fp.maybe(5)(x => x * 2).ap(fp.maybe(x => ++x))(console.log);
+// fp.maybe(5).chain(x => fp.maybe(x * 2))(x => ++x)(console.log);
 
-fp.mapNull = (fn, x) => (x ? fn(x) : null);
-
-fp.maybe = x => {                                       // монада
-    const map = fn => fp.maybe(fp.mapNull(fn, x));      // метод монады map для отображения через другие функции
-    map.ap = fnA => fnA(fn => fp.mapNull(fn, x));       //для применения функции других функторов
-    map.chain = fnM => fnM(x);                          // для постороения цепочек
-    return map;
-};
-
-fp.maybe(5)(x => x * 2)(x => ++x)(console.log);
-fp.maybe(5)(x => x * 2).ap(fp.maybe(x => ++x))(console.log);
-fp.maybe(5).chain(x => fp.maybe(x * 2))(x => ++x)(console.log);
-
-
-// Функциональный объект
 
 /**
+ Старые заметки оставлены для истории размышления
+
+
  В отличие от функтора функциональный объект посто хранит в себе значение и
  результат применения функции к его значению он не кладет в новый контейнер
  **/
@@ -132,91 +238,93 @@ fp.maybe(5).chain(x => fp.maybe(x * 2))(x => ++x)(console.log);
  метоы для чейнинга, а также map, apply.
  **/
 
-// function Counter() {}
-//
-// const counter = initial => {
-//     const f = val => {
-//         f.count += val;
-//         Object.keys(f.events).filter(n => n <= f.count).forEach(n => {
-//             f.events[n].forEach(callback => callback(f.count));
-//             delete f.events[n];
-//         });
-//         return f;
-//     };
-//     Object.setPrototypeOf(f, Counter.prototype);
-//     return Object.assign(f, { count: 0, events: {} })(initial);
-// };
-//
-// Counter.prototype.on = function(n, callback) {
-//     const event = this.events[n];
-//     if (event) event.push(callback);
-//     else this.events[n] = [callback];
-//     return this(0);
-// };
-//
-// // Usage
-//
-// const c = counter(10);
-// c.on(5, val => console.log('Counter > 5, value:', val));
-// c.on(25, val => console.log('Counter > 25, value:', val));
-// c(5);
-// setTimeout(() => c(15), 100);
+// Функциональный объект
 
-// второй функциональный объект  прекрасная реализация + удивительно быстрая
+function Counter() {}
 
-function Collector() {}
-
-const collect = expected => {
-    const collector = (key, value) => {                   // [строка1] за счет привязывания expected с помощью assign
-        if (collector.finished) return collector;        // мы игнорим строки 1-2 при просто тупо добавлении
-        collector.count++;                                // новых полей data
-        collector.data[key] = value;
-        if (value instanceof Error) {
-            collector.callback(value, collector.data);
-            return collector;
-        }
-        if (collector.expected === collector.count) {
-            collector.callback(null, collector.data);
-        }
-        return collector;
-    };                                                  // [строка 2]
-
-    const fields = {
-        count: 0,
-        expected,
-        data: {},
-        callback: null,
-        finished: false
+const counter = initial => {
+    const f = val => {
+        f.count += val;
+        Object.keys(f.events).filter(n => n <= f.count).forEach(n => {
+            f.events[n].forEach(callback => callback(f.count));
+            delete f.events[n];
+        });
+        return f;
     };
-
-    Object.setPrototypeOf(collector, Collector.prototype);
-    return Object.assign(collector, fields);
+    Object.setPrototypeOf(f, Counter.prototype);
+    return Object.assign(f, { count: 0, events: {} })(initial);
 };
 
-Collector.prototype.done = function(callback) {
-    this.callback = callback;
-    return this;
+Counter.prototype.on = function(n, callback) {
+    const event = this.events[n];
+    if (event) event.push(callback);
+    else this.events[n] = [callback];
+    return this(0);
 };
 
 // Usage
 
-const dc = collect(4).done((err, data) => {
-    console.log('Done callback ');
-    console.dir({ err, data });
-});
+const c = counter(10);
+c.on(5, val => console.log('Counter > 5, value:', val));
+c.on(25, val => console.log('Counter > 25, value:', val));
+c(5);
+setTimeout(() => c(15), 100);
 
-dc('key1', 'value1');
+// второй функциональный объект  прекрасная реализация + удивительно быстрая
 
-setTimeout(() => {
-    dc('key2', 'value2');
-}, 100);
-
-setImmediate(() => {
-    dc('key3', 'value3');
-});
-
-dc('key4', 'value4');
-dc('key5', 'value5');
+// function Collector() {}
+//
+// const collect = expected => {
+//     const collector = (key, value) => {                   // [строка1] за счет привязывания expected с помощью assign
+//         if (collector.finished) return collector;        // мы игнорим строки 1-2 при просто тупо добавлении
+//         collector.count++;                                // новых полей data
+//         collector.data[key] = value;
+//         if (value instanceof Error) {
+//             collector.callback(value, collector.data);
+//             return collector;
+//         }
+//         if (collector.expected === collector.count) {
+//             collector.callback(null, collector.data);
+//         }
+//         return collector;
+//     };                                                  // [строка 2]
+//
+//     const fields = {
+//         count: 0,
+//         expected,
+//         data: {},
+//         callback: null,
+//         finished: false
+//     };
+//
+//     Object.setPrototypeOf(collector, Collector.prototype);
+//     return Object.assign(collector, fields);
+// };
+//
+// Collector.prototype.done = function(callback) {
+//     this.callback = callback;
+//     return this;
+// };
+//
+// // Usage
+//
+// const dc = collect(4).done((err, data) => {
+//     console.log('Done callback ');
+//     console.dir({ err, data });
+// });
+//
+// dc('key1', 'value1');
+//
+// setTimeout(() => {
+//     dc('key2', 'value2');
+// }, 100);
+//
+// setImmediate(() => {
+//     dc('key3', 'value3');
+// });
+//
+// dc('key4', 'value4');
+// dc('key5', 'value5');
 
 // {
 //   key1: 'value1',
@@ -246,4 +354,23 @@ dc('key5', 'value5');
  *
  */
 
+//__________________________________\
+// спустя несколько лет
+/**
+Функциональный объект -объект функционального типа,
+ который является функцией и объектом одновременно.
+ Другими словами, функциональный объект может быть вызван,
+ как функция и может иметь свойства и методы, как объект.
 
+
+ Функтор / Functor - это функциональный объект, который хранит защищенное значение и позволяющий
+ отобразить это значение в другой функтор через вызов метода map или через функциональный чейнинг
+
+ Реналь сказал что функтор построенный не на замыкании это эндофунктор -
+ но об этом лучше на с. не вспоминать
+
+ Апликативный функтор - это функтор с методом apply - благодаря этому методу он может применить к
+ своему значению функцию другого функтора и положить результат в новый функтор
+
+ Монада - это апликативный функтор с методом chain
+ **/

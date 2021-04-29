@@ -31,6 +31,10 @@
 // const user4 = userFactory4('marcus', 'emperors', 'marcus@spqr.it');
 // console.log(user4);
 
+//  интересная заметка - вот у тех инстанцов вообще-то не объявлен класс - но js  под капотом
+// в каестве птимизации создаст скрытый класс для всех этих экземпляров при условии что аргументы функции
+// имеют строго указанные типы (ну или тупо повторяется из раза в раз)
+
 // Фабрика прототипов со своим методом toString и с полями-дескрипторами доступа
 // сеттеры с проверкой типа и валидацией
 
@@ -68,18 +72,14 @@
 //
 //     return Logable;
 // };
-//
-// /*
-// Интересный момент: мы не создаем новые поля прототипа.
-// Мы записываем все поля в одно единственное
-// поле прототипа values.
-//  */
-//
+// //
+// //
 // const Person = logable({                // Person - конструктор с метаданными
 //     name: { type: 'string', validate: name => name.length > 0 },
 //     born: { type: 'number', validate: born => !(born % 1) },
 // });
 //
+// // console.log(Person.prototype.toString());
 // const p1 = new Person({ name: 'Marcus Aurelius', born: 121 });  // p1 - экземпляр объекта
 // console.log(p1.toString());
 // p1.born = 1923;
@@ -109,7 +109,8 @@
 //                     );
 //                     if (valid) this.values[key] = value;
 //                     else console.log('Validation failed:', key, value);
-//                 }
+//                 },
+//                 enumerable: true,
 //             });
 //         }
 //     }
@@ -121,18 +122,12 @@
 //         return result;
 //     }
 // };
-//
+
 // const Person = logable({          // Person - класс
 //     name: { type: 'string', validate: name => name.length > 0 },
 //     born: { type: 'number', validate: born => !(born % 1) },
 // });
-//
-// /*
-// Интересный момент: мы не создаем новые поля класса.
-// Мы записываем все поля в одно единственное
-// поле класса values.
-//  */
-//
+
 // const p1 = new Person({ name: 'Marcus Aurelius', born: 121 });  // p1 - экземпляр класса
 // console.log(p1.toString());
 // p1.born = 1923;
@@ -188,8 +183,9 @@
 // console.log(p1.toString());
 // Person.toBig();
 
-// Статический метод класса как фабрика экземпляров своего класса
 
+// Статический метод класса как фабрика экземпляров своего класса
+//
 // class Person {
 //   constructor(name) {
 //       this.name = name;
@@ -206,14 +202,14 @@
 // console.dir({ p2 });  // вызываются также как динамические
 
 // Функция-фабрика экземпляров класса
-
+//
 // class Person {
 //     constructor(name) {
 //         this.name = name;
 //     }
 // }
 //
-// const factorify = Category => (...args) => new Category(...args); // фабрика экземпляров класса
+// const factorify = Category => (args) => new Category(args); // фабрика экземпляров класса
 //
 // const p1 = new Person('Marcus');
 // console.dir({ p1 });
@@ -222,3 +218,58 @@
 // const p2 = personFactory('Marcus');
 // console.dir({ p2 });
 
+
+// заметка про дескриптор enumerable
+
+// const logable = (data) => {
+//     return Object.defineProperties(data, {
+//         name: {
+//             value: data.name,
+//             writable: true,
+//             enumerable:true,
+//         },
+//         born: {
+//             value: data.born,
+//             writable: false,
+//             enumerable:false,
+//         }
+//     })
+// }
+//
+// const Person = logable({          // Person - класс
+//     name: { type: 'string', validate: name => name.length > 0 },
+//     born: { type: 'number', validate: born => !(born % 1) },
+// });
+//
+// console.log(Person);
+// for (const key in Person) {
+//     console.log(key);
+// }
+
+
+// дополнение про фабрики - фабрика позволяет в отличие от класса наследоваться сразу от нескольких
+// родителейю В то время как класс только от одного - ну или химичить с defineProperties или Object.concat
+// но это не наследование а примеси
+
+function person(...args) {
+    return {
+        firstName: args[0],
+        lastName: args[1],
+        age: args[2],
+        gender: args[3],
+        employed: args[4],
+        occupation: args[5],
+        married: args[6],
+        sayName() {
+            console.log(`gggghh`);
+            console.log(`${this.firstName} ${this.lastName}`);
+        },
+        introduce() {
+            console.log(`"Hello, my name is ${this.firstName} ${this.lastName}.  I am ${this.age} years old.  I am a ${this.gender}.`);
+        },
+    }
+}
+
+const gh = person("John", "Doe", 18, "male", false, null, true);
+console.log(gh.sayName());
+console.log(gh);
