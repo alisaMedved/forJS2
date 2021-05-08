@@ -164,36 +164,315 @@
 //
 // })();
 
-class Proto {
-    move() {
-        console.log("динамический метод")
+// class Proto {
+//     move() {
+//         console.log("динамический метод")
+//     }
+//     static more() {
+//         console.log("статический метод")
+//     }
+// }
+//
+// Proto.prototype.love = function() {
+//     console.log("динамический метод 2")
+// }
+//
+// Proto.lore = function() {
+//     console.log("статический метод 2")
+// }
+//
+// const potomok = new Proto();
+//
+// potomok.love()
+// potomok.move()
+//
+// // вызовет ошибку ведь статические методы не вызываются у потомков
+// // potomok.lore()
+// // potomok.more()
+//
+//
+// Proto.lore()
+// Proto.more()
+// Proto.prototype.love()
+// Proto.prototype.move()
+
+
+// const c1 = chain()
+//     .do(readConfig, "myConfig")
+//     .do(doQuery, "bla bla")
+//     .do(httpGet, "http:/bla.ru")
+//     .do(readFile, "readme.md");
+// c1();
+//
+// const cur = {
+//     fn: null,
+//     args: null,
+//     prev: {
+//         fn: doQuery,
+//         args: "bla bla",
+//         prev: {
+//             fn: readConfig,
+//             args: "myConfig",
+//             prev: null,
+//         }
+//     }
+// }
+// ------
+// const cur = {
+//     fn: null,
+//     args: null,
+//     prev: {
+//         fn: doQuery,
+//         args: "bla bla",
+//         prev: {
+//             fn: readConfig,
+//             args: "myConfig",
+//             prev: null,
+//             next: {
+//                 fn: doQuery,
+//                 args: "bla bla",
+//                 prev: {
+//                     fn: readConfig,
+//                     args: "myConfig",
+//                     prev: null,
+//                 },
+//                 next: {
+//                     fn: null,
+//                     args: null,
+//                     prev: {
+//                         fn: doQuery,
+//                         args: "bla bla",
+//                         prev: {
+//                             fn: readConfig,
+//                             args: "myConfig",
+//                             prev: null,
+//                         },
+//                     }
+//                 }
+//             }
+//         },
+//         next: {
+//             fn: null,
+//             args: null,
+//             prev: {
+//                 fn: doQuery,
+//                 args: "bla bla",
+//                 prev: {
+//                     fn: readConfig,
+//                     args: "myConfig",
+//                     prev: null,
+//                 },
+//             }
+//         }
+//     }
+// }
+// ----
+//
+//
+// function chain(prev = null) {
+//     const cur = () => {
+//         if (cur.prev) {
+//             cur.prev.next = cur;
+//             cur.prev();
+//         } else {
+//             cur.forward();
+//         }
+//     };
+//     cur.prev = prev;
+//     cur.fn = null;
+//     cur.args = null;
+//     cur.do = (fn, ...args) => {
+//         cur.fn = fn;
+//         cur.args = args;
+//         return chain(cur);
+//     };
+//     cur.forward = () => {
+//         if (cur.fn) cur.fn(cur.args, () => {
+//             if (cur.next) cur.next.forward();
+//         })
+//     }
+//     return cur;
+// }
+//
+//
+// -----
+//     const cur = {
+//     prev: null,
+//         fn: null,
+//         args: null,
+//     }
+//
+//     ------
+//         const cur = {
+//             fn: null,
+//             args: null,
+//             prev: {
+//                 fn: readConfig,
+//                 args: "myConfig",
+//                 prev: null,
+//             }
+//         }
+//         ------
+//             const cur = {
+//                 fn: null,
+//                 args: null,
+//                 prev: {
+//                     fn: doQuery,
+//                     args: "bla bla",
+//                     prev: {
+//                         fn: readConfig,
+//                         args: "myConfig",
+//                         prev: null,
+//                     }
+//                 }
+//             }
+//             ---
+//
+
+// проблемы всех выше описанных подходов
+// смеси синтаксисов например промисов и колбеков
+// приходится писать адаптер
+
+// промисы и async await работают медленее колбеков
+
+// нету возможности отмены вызванного ассинхронного действия
+// если оно не успело завершится в течение заданного времени
+
+// ниже реализуем эту возможность
+
+function timeout(msec, fn) {
+    let timer = setTimeout(() => {
+        if (timer) console.log('Function timeout');
+        timer = null;
+    }, msec);
+    return (...args) => {
+        if (timer) {
+            timer = null;
+            fn(...args);
+        }
     }
-    static more() {
-        console.log("статический метод")
+}
+//
+// // usage
+//
+// const fn = par => {
+//     console.log('Function called, par: ' + par);
+// }
+//
+// const fn100 = timeout(100, fn);
+// const fn200 = timeout(200, fn);
+//
+// setTimeout(() => {
+//     fn100('first');
+//     fn200('second');
+// }, 150)
+
+// пишем функцию отмены ассинхронной функции коль нет встроенного
+//
+// const cancelable = fn => {
+//     const wrapper = (...args) => {
+//         if (fn) return fn(...args);
+//     }
+//     wrapper.cancel = () => {
+//         fn = null;
+//     };
+//     return wrapper;
+// }
+//
+// // usage
+//
+// const fn = par => {
+//     console.log('Function called, par: ' + par);
+// }
+//
+// const f = cancelable(fn);
+//
+// f('first');
+// f.cancel();
+// f('second');
+
+
+//больше самописных утилит
+
+// once - функция вызывается только один раз
+// limit - вызывается максимум n-ое кол-во раз
+// trottle - ограничение по частоте вызова - допускается максимальное колво n раз в m секкунд
+// debounce - раз в сколько минут допускается единичный вызов функции
+// utils - возвращает функтор у которого все методы выше описанные
+
+const utils = fn => {
+    const wrapper = (...args) => {
+        console.log(...args);
+        if (fn && wrapper.col !== 0) {
+                if (wrapper.col !== undefined) {
+                    wrapper.col = wrapper.col - 1;
+                }
+                    wrapper.res(fn(...args));
+                    return wrapper;
+        }
     }
+    wrapper.col = undefined;
+    wrapper.timeDeb = false;
+    wrapper.res = (par) => {
+        return par;
+    }
+    wrapper.cancel = () => {
+        fn = null;
+        return wrapper;
+    };
+    wrapper.once = () => {
+            if (wrapper.col !== 0 && !wrapper.timeDeb) {
+                wrapper.col = 1
+            }
+            return wrapper;
+        }
+    wrapper.limit = (col) => {
+        if (wrapper.col !== 0 && !wrapper.timeDeb) {
+            wrapper.col = col;
+        }
+        return wrapper;
+    }
+    wrapper.timeout = (msec) => {
+        setTimeout(() => {
+            fn = null;
+        }, msec);
+        return wrapper;
+    }
+    wrapper.debounce = (msec) => {
+        wrapper.timeDeb = true;
+        wrapper.col = 1;
+        setInterval(() => {
+            wrapper.col = 1;
+            console.log("куку");
+        }, msec);
+        return wrapper;
+    }
+    wrapper.throttle = (colc, msec) => {
+        wrapper.timeDeb = true;
+        wrapper.col = colc;
+        setInterval(() => {
+            wrapper.col = colc;
+        }, msec);
+        return wrapper;
+    }
+    return wrapper;
 }
 
-Proto.prototype.love = function() {
-    console.log("динамический метод 2")
+//usage
+
+const fn = par => {
+    console.log('Function called, par: ' + par);
 }
-
-Proto.lore = function() {
-    console.log("статический метод 2")
-}
-
-const potomok = new Proto();
-
-potomok.love()
-potomok.move()
-
-// вызовет ошибку ведь статические методы не вызываются у потомков
-// potomok.lore()
-// potomok.more()
+const f = utils(fn).limit(3)("8")("0").cancel()("788")
+// const f1 = utils(fn).limit(3)("8")("0")("788").debounce(25000)
+// setInterval(() => {
+//     f1("7888889")
+// }, 10000)
+const f1 = utils(fn).limit(3)("8")("0")("788").throttle(2, 24000)
+setInterval(() => {
+    f1("7888889")
+}, 5000)
 
 
-Proto.lore()
-Proto.more()
-Proto.prototype.love()
-Proto.prototype.move()
 
 

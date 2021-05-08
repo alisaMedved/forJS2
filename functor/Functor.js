@@ -29,18 +29,18 @@
 //
 // // функтор через рекурсивное замыкание
 //
-// function maybe(x) {
-//     return function(fn) {
-//         if (x && fn) {
-//             return maybe(fn(x));
-//         } else {
-//             return maybe(null);
-//         }
-//     };
-// }
-// const maybe = x => fn => maybe(x && fn ? fn(x) : null);
-// maybe(5)()(console.log);
-// maybe(5)(x => x*2)(x => ++ x)(console.log);
+function maybe(x) {
+    return function(fn) {
+        if (x && fn) {
+            return maybe(fn(x));
+        } else {
+            return maybe(null);
+        }
+    };
+}
+const maybe = x => fn => maybe(x && fn ? fn(x) : null);
+maybe(5)()(console.log);
+maybe(5)(x => x*2)(x => ++ x)(console.log);
 
 // а вот тут метода нет
 
@@ -239,40 +239,50 @@
  **/
 
 // Функциональный объект
-
-function Counter() {}
-
-const counter = initial => {
-    const f = val => {
-        f.count += val;
-        Object.keys(f.events).filter(n => n <= f.count).forEach(n => {
-            f.events[n].forEach(callback => callback(f.count));
-            delete f.events[n];
-        });
-        return f;
-    };
-    Object.setPrototypeOf(f, Counter.prototype);
-    return Object.assign(f, { count: 0, events: {} })(initial);
-};
-
-Counter.prototype.on = function(n, callback) {
-    const event = this.events[n];
-    if (event) event.push(callback);
-    else this.events[n] = [callback];
-    return this(0);
-};
-
-// Usage
-
-const c = counter(10);
-c.on(5, val => console.log('Counter > 5, value:', val));
-c.on(25, val => console.log('Counter > 25, value:', val));
-c(5);
-setTimeout(() => c(15), 100);
-
-// второй функциональный объект  прекрасная реализация + удивительно быстрая
-
+//
+// function Counter() {}
+//
+// const counter = initial => {
+//     const f = val => {
+//         console.log("val ", val);
+//         f.count += val;
+//         Object.keys(f.events).filter(n => n <= f.count).forEach(n => {
+//             f.events[n].forEach(callback => callback(f.count));
+//             delete f.events[n];
+//         });
+//         return f;
+//     };
+//     Object.setPrototypeOf(f, Counter.prototype);
+//     return Object.assign(f, { count: 0, events: {} })(initial);
+// };
+//
+// Counter.prototype.on = function(n, callback) {
+//     const event = this.events[n];
+//     if (event) {
+//         event.push(callback);         // этот блок никогда не исполняется
+//         console.log("мы здесь");
+//     }
+//     else this.events[n] = [callback];
+//     // return this(0);               // тупо чтобы показать возможности ФО - и как функцию мол можно вызвать
+// };
+//
+// // Usage
+//
+// const c = counter(10);
+// c.on(5, val => console.log('Counter > 5, value:', val));
+// c.on(25, val => console.log('Counter > 25, value:', val));
+// c(5);
+// setTimeout(() => c(15), 100);
+//
+// // второй функциональный объект  прекрасная реализация + удивительно быстрая
+//
 // function Collector() {}
+//
+// // почему реализация удивительно бстрая если юзаешь ее в чем-то (например в браузере) основанном на движке v8 ?
+// // через 2-3 иттерации js понимает что верхний аргумент expected не используется - там нет замыкания
+// // вместо замыкания завязка на прототипе
+//
+// //но интересный вопрос в другом - сама операция setPrototypeOf медленная
 //
 // const collect = expected => {
 //     const collector = (key, value) => {                   // [строка1] за счет привязывания expected с помощью assign
@@ -326,6 +336,10 @@ setTimeout(() => c(15), 100);
 // dc('key4', 'value4');
 // dc('key5', 'value5');
 
+
+// важная заметка (напоминание) - вот что выведется - и главный прикол
+// сначала все синхронные операции дае написанные позже
+// и лишь потом все setImmediate setTimeout
 // {
 //   key1: 'value1',
 //   key4: 'value4',
@@ -374,3 +388,76 @@ setTimeout(() => c(15), 100);
 
  Монада - это апликативный функтор с методом chain
  **/
+
+// ФО через функцию
+// const FO = (par) => {
+//     this.a = par;
+// }
+//
+// FO.methodFO = function() {
+//     console.log(this.a);
+// }
+
+// ФО через прототип
+
+function FO () {}
+
+const fo = (par) => {
+    const func = (val) => {
+        func.count += val;
+            Object.keys(func.events).filter(n => n <= func.count).map(el => func.events[el](func.count));
+        return func;
+    }
+    Object.setPrototypeOf(func, FO.prototype);
+   return Object.assign(func, {count: 0, events: {}})(par);
+}
+
+FO.prototype.on = function(n, callback) {
+        this.events[n] = callback;
+}
+
+//usage
+
+const example = fo(10);
+example.on(5, val => console.log("Счетчик меньше или равен 5, счетчик = ", val));
+example(5);
+setTimeout(() => example(15), 100);
+
+// ФО через класс
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
