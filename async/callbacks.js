@@ -340,18 +340,18 @@
 
 // ниже реализуем эту возможность
 
-function timeout(msec, fn) {
-    let timer = setTimeout(() => {
-        if (timer) console.log('Function timeout');
-        timer = null;
-    }, msec);
-    return (...args) => {
-        if (timer) {
-            timer = null;
-            fn(...args);
-        }
-    }
-}
+// function timeout(msec, fn) {
+//     let timer = setTimeout(() => {
+//         if (timer) console.log('Function timeout');
+//         timer = null;
+//     }, msec);
+//     return (...args) => {
+//         if (timer) {
+//             timer = null;
+//             fn(...args);
+//         }
+//     }
+// }
 //
 // // usage
 //
@@ -400,79 +400,307 @@ function timeout(msec, fn) {
 // debounce - раз в сколько минут допускается единичный вызов функции
 // utils - возвращает функтор у которого все методы выше описанные
 
-const utils = fn => {
-    const wrapper = (...args) => {
-        console.log(...args);
-        if (fn && wrapper.col !== 0) {
-                if (wrapper.col !== undefined) {
-                    wrapper.col = wrapper.col - 1;
-                }
-                    wrapper.res(fn(...args));
-                    return wrapper;
-        }
-    }
-    wrapper.col = undefined;
-    wrapper.timeDeb = false;
-    wrapper.res = (par) => {
-        return par;
-    }
-    wrapper.cancel = () => {
-        fn = null;
-        return wrapper;
-    };
-    wrapper.once = () => {
-            if (wrapper.col !== 0 && !wrapper.timeDeb) {
-                wrapper.col = 1
-            }
-            return wrapper;
-        }
-    wrapper.limit = (col) => {
-        if (wrapper.col !== 0 && !wrapper.timeDeb) {
-            wrapper.col = col;
-        }
-        return wrapper;
-    }
-    wrapper.timeout = (msec) => {
-        setTimeout(() => {
-            fn = null;
-        }, msec);
-        return wrapper;
-    }
-    wrapper.debounce = (msec) => {
-        wrapper.timeDeb = true;
-        wrapper.col = 1;
-        setInterval(() => {
-            wrapper.col = 1;
-            console.log("куку");
-        }, msec);
-        return wrapper;
-    }
-    wrapper.throttle = (colc, msec) => {
-        wrapper.timeDeb = true;
-        wrapper.col = colc;
-        setInterval(() => {
-            wrapper.col = colc;
-        }, msec);
-        return wrapper;
-    }
-    return wrapper;
-}
-
-//usage
-
-const fn = par => {
-    console.log('Function called, par: ' + par);
-}
-const f = utils(fn).limit(3)("8")("0").cancel()("788")
-// const f1 = utils(fn).limit(3)("8")("0")("788").debounce(25000)
+// const utils = fn => {
+//     const wrapper = (...args) => {
+//         console.log(...args);
+//         if (fn && wrapper.col !== 0) {
+//                 if (wrapper.col !== undefined) {
+//                     wrapper.col = wrapper.col - 1;
+//                 }
+//                     wrapper.res(fn(...args));
+//                     return wrapper;
+//         }
+//     }
+//     wrapper.col = undefined;
+//     wrapper.timeDeb = false;
+//     wrapper.res = (par) => {
+//         return par;
+//     }
+//     wrapper.cancel = () => {
+//         fn = null;
+//         return wrapper;
+//     };
+//     wrapper.once = () => {
+//             if (wrapper.col !== 0 && !wrapper.timeDeb) {
+//                 wrapper.col = 1
+//             }
+//             return wrapper;
+//         }
+//     wrapper.limit = (col) => {
+//         if (wrapper.col !== 0 && !wrapper.timeDeb) {
+//             wrapper.col = col;
+//         }
+//         return wrapper;
+//     }
+//     wrapper.timeout = (msec) => {
+//         setTimeout(() => {
+//             fn = null;
+//         }, msec);
+//         return wrapper;
+//     }
+//     wrapper.debounce = (msec) => {
+//         wrapper.timeDeb = true;
+//         wrapper.col = 1;
+//         setInterval(() => {
+//             wrapper.col = 1;
+//             console.log("куку");
+//         }, msec);
+//         return wrapper;
+//     }
+//     wrapper.throttle = (colc, msec) => {
+//         wrapper.timeDeb = true;
+//         wrapper.col = colc;
+//         setInterval(() => {
+//             wrapper.col = colc;
+//         }, msec);
+//         return wrapper;
+//     }
+//     return wrapper;
+// }
+//
+// //usage
+//
+// const fn = par => {
+//     console.log('Function called, par: ' + par);
+// }
+// const f = utils(fn).limit(3)("8")("0").cancel()("788")
+// // const f1 = utils(fn).limit(3)("8")("0")("788").debounce(25000)
+// // setInterval(() => {
+// //     f1("7888889")
+// // }, 10000)
+// const f1 = utils(fn).limit(3)("8")("0")("788").throttle(2, 24000)
 // setInterval(() => {
 //     f1("7888889")
-// }, 10000)
-const f1 = utils(fn).limit(3)("8")("0")("788").throttle(2, 24000)
-setInterval(() => {
-    f1("7888889")
-}, 5000)
+// }, 5000)
+
+// // встроенные в ноду функции
+//
+// const util = require('util');
+//
+// //promisify
+//
+// const promise = util.promisify(fn);
+// promise.then((data) => {
+//     // Do something with `stats`
+// }).catch((error) => {
+//     // Handle the error.
+// });
+//
+// // callbackify
+//
+// const callbackFunction = util.callbackify(promise);
+//
+// callbackFunction((err, ret) => {
+//  // do something
+// });
+
+// надо дасть ниже определение адаптеру
+
+// есть также понятия прикладного и системного кода
+// системный код - это уровень ние, из него состоит конструкцииприкладного кода
+// системный код - должен быть производительным
+// прикладной код должен быть архитектурно правильным и читаемым
+
+// фдаптер sync to async
+
+// const last = arr => arr[arr.length - 1]
+//
+// const toAsync = fn => (...args) => {
+//     const callback = last(args);
+//     args.pop();
+//     callback(null, fn(...args));  // асинхронная фун-я
+// }
+//
+// // usage
+//
+// const f1 = par => par;
+// const f2 = par => par;
+// const f3 = par => par;
+// const f4 = par => par;
+//
+// const af1 = toAsync(f1);
+// const af2 = toAsync(f2);
+// const af3 = toAsync(f3);
+// const af4 = toAsync(f4);
+//
+// af1('value', (e, data) => {
+//     af2('value', (e, data) => {
+//         af3('value', (e, data) => {
+//             af4('value', (e, data) => {
+//                 console.log(data);
+//             })
+//         })
+//     })
+// })
+
+// зачем он? Если есть функции синхроннфе и ассинхронные и нужно привести их к единому контракту
+// то можно синхронные привести к контракту ассинхронных
+// тгда можно создать цепочку вызовов
+
+// адаптер sync to Promise
+
+// const toPromise = fn => (...args) =>
+//     new Promise(resolve => resolve(fn(...args)));
+//
+// // usage
+// const f1 = par => par;
+// const f2 = par => par;
+// const f3 = par => par;
+// const f4 = par => par;
+//
+// // вот здесь цепочка синхронных функций
+// console.log(f4(f3(f2(f1('value')))));
+//
+// const pf1 = toPromise(f1);
+// const pf2 = toPromise(f2);
+// const pf3 = toPromise(f3);
+// const pf4 = toPromise(f4);
+//
+// Promise.resolve()
+//     .then(pf1.bind(null, 'value'))
+//     .then(pf2())
+//     .then(pf3())
+//     .then(pf4())
+//     .then(data => {
+//         console.log(data)
+//     })
+
+// на 43 мин посмотри методы metasync может сама напишешь
+
+// вот примеры использования metasync
+
+// const fx = metasync.flow(
+//     [f1, f2, f3, [[f4, f5, [f6, f7], f8]], f9]
+// )
+//
+// // если двойные скобки массива - параллельное исполнение
+// // одинарные - последовательное исполнение
+//
+// //то же самое
+//
+// const fx = metasync(
+//     [f1, f2, f3, [[f4, f5, [f6, f7], f8]], f9]
+// )
+
+// надо признать что и flow что sequential и parallel все эти функции из metasync осуществляют
+// только контракт ассинхронных функции - все аргументы АФ и на выходе АФ
+// с четким соблюдением контракта callback-last error-first
 
 
+// Data Collector
+// но иногда работа с асинхронщиной сводится к обработке события инициируемое пользователем
+// и тогда удобен другой паттерн Data Collector похлжий на паттерн event
 
+// const dc1 = new metasync.DataCollector(4);
+// // первый аргумент кол-во кусков информации
+// // второй - таймаут в течение которого если все куски инфы придут вызовется событие done
+// const dc2 = new metasync.DataCollector(4, 5000);
+//
+// dc1.on('error', (err, key) => {});
+// dc1.on('timeout', (err, data) => {});
+// dc1.on('done', (err, data) => {});
+//
+// // сам DataCollector хранит внутри себя коллекцию (массив)
+// // вот так мы кладем кусок данных в эту коллекцию
+//
+// dc1.collect(data);
+//
+// // а вот так мы кладем ошибку
+//
+// dc1.error(new Error());
+//
+// //Key collector
+//
+// // в keyCollector уже хранится хеш мапа
+// // первый аргумент - массив ключей (индексов)
+// //
+// const keyCollector = new KeyCollector(
+//     ['k1', 'k2'], data => console.dir(data)
+// );
+//
+// // вот так мы кладем значение в поле определенного ключа
+// // вот тут синхронная вставка
+// keyCollector.collect('k1', {});
+//
+//
+// // а вот тут ассинхронная вставка
+// fs.readFile('History.md', (err, data) => {
+//     keyCollector.collect('history', data);
+// })
+//
+// // в чем прикол DataCollector и keyCollector - они быстрее и производительнее колбеков и промисов
+//
+// // пчм производительнее колбеков? колбеки очень сильно набивают стек, а развязка через события
+// // набивает колстек намного меньше
+//
+//
+// //а вот и окончательный синтаксис
+//
+// const dc1 = metasync
+//     .collect(3)
+//     .timeout(5000)
+//     .done((err, data) => {})
+// dc1(item);
+//
+// const dc2 = metasync
+//     .collect(['k1', 'k2', 'k3'])
+//     .timeout(5000)
+//     .done((err, data) => {})
+// dc1(key, value);
 
+// парочка фич date/key collect (коллектора) из metasync
+
+const dc = metasync
+    .collect(count)
+    .distinct()
+    .done((err, data) => {})
+
+// ключ значение ошибка (ну вдруг в поле надо записать ошибку а не значение) иои есть вероятность ошибки
+dc(key, error, value);
+
+// pick - запись элемента в поле
+dc.pick(key, value);
+// fail - запись ошибки
+dc.fail(key, error);
+fs.readFile(filename, dc.bind(null, key));
+// а вот если результат АФ ндо записать в поле с опред ключом
+// 1 арг - ключ поля
+// 2 - АФ
+// 3- аргументы АФ
+dc.take(key, fs.readFile, filename)
+
+//а теперь подводим итоги с производительностью
+// promiseAll - 17
+// flow - 7
+// collect - 3
+
+// это тесты на ноде 7
+// в ноде 10 промисы сильно оптимизировали и теперь там отставание меньше
+
+// паттерн очереди
+
+// //  создаем очередь из 3 параллельных каналов
+// const cq = metasync.quene(3)
+//     //в каждом канале идет ожидание до оьработкидо 2000 мс
+//     .wait(2000)
+//     // запрос обрабатывается не более 5000 мс
+//     .timeout(5000)
+//
+//     // в очередб поступает не более 100 запросов в 1с
+//     .throttle(100, 1000)
+//     // колбек обработки запроса
+//     .process((item, cb) => cb(err, resut))
+//     // колбек обработки рез-та запроса при success
+//     .success(item => {})
+//     // и fail
+//     .failure(item => {})
+//     // и success и failure вместе (как в промисах помнишь)
+//     .done(() => {})
+//     // когда все очередь рассосалась выз-ся метод drain
+//     .drain(() => {})
+
+//Адаптер / Adapter - Паттерн достижения совместимости,
+// позволяющий обернуть класс, функцию или другой программный компонент
+// с несовместимым контрактом в программный компонент с контрактом, который нам нужен.
+
+//
