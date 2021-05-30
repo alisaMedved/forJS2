@@ -168,15 +168,207 @@
 //
 // console.log(text);
 
-console.log('https://bs.bregis.ru/api/bregis/ui/apiroutes/routes/rule/5d3679e7-cca5-4fe6-8d7e-4869a2310d77?destination-icmid=4b888b04-6b22-496a-acb6-8f43850d3769&currentPage=600&pageSize=10&searchType=name&sortType=name&sortValue=abc&searchValue='.length);
+// console.log('https://bs.bregis.ru/api/bregis/ui/apiroutes/routes/rule/5d3679e7-cca5-4fe6-8d7e-4869a2310d77?destination-icmid=4b888b04-6b22-496a-acb6-8f43850d3769&currentPage=600&pageSize=10&searchType=name&sortType=name&sortValue=abc&searchValue='.length);
+//
+//
+// console.log('sdfghjkl;,mnbvcsewrtyuioplkfdsasdfghjkl;. cxsqwertyuiop[kjhgfdsaqwopkjhgfdsaячсмитьбжщшгнекуцйфывапролдтимсч'.length);
+//
+// console.log('https://bs.bregis.ru/api/bregis/ui/integrationterms/matching?source=d6b9a2e8-14c7-4322-a795-a8609452240f&destination=1ec774e9-6f08-4714-8239-2479ea3ba4fc&termType=services&currentPage=1&pageSize=10&searchType=sourceName&searchValue=Кровь&sortType=sourceName&sortValue=abc'.length);
+//
+//
+// const sesTimeNum = parseInt("", 10);
+// console.log(new Date().toISOString().slice(0, -1));
+// console.log(0 % 2);
+// console.log(5 % 2);
+
+const mas = [
+    "мкр. Спутник, Дачная",
+    "Зубово, ул. Достоевского",
+    "с. Зубово",
+    "Чесноковка, Лазурная",
+    "Зубово Life 2,Ивана Бунина 20",
+    "Спутник. Радужная 4",
+    "Микр. Спутник ул. Инженерная, 2",
+    "Спутник ",
+    "Спутник, творческая",
+    "Чесноковка, Загородная ",
+    "с. Зубово, ул. Изумрудная ",
+    "Зубово, ул. Озёрная, 14",
+    "Зубово, ул. Серебряная",
+    "Зубово ул. Изумрудная ",
+    "Зубово,Парковая ",
+    "Чесноковка, Центральная",
+    "Село Чесноковка, ул Пушкина ",
+    "Спутник радужная",
+    "Село Зубово, ул Лесная",
+    "П.чесноковка, ул.Шоссейна",
+    "Чеснаковка ул. Парковая 20",
+    "Спутник, ул. Фруктовая",
+    "Чесноковка, Загородная",
+    "Зубово, Парковая",
+    "с. Зубово, Улица Парковая",
+    "Зубово Лайф2,  ул.Толстого",
+    "С. Чесноковка, мкр. Спутник, Парковая",
+    "Зубово, Парковая",
+    "Спутник загородная ",
+    "Чесноковка, Школьная ",
+    "Чесноковка, ул.Центральная 26/2",
+    "Зубово, Весенняя",
+    "Чесноковка, ул. Майданная  ( Кировский район)",
+    "Чесноковка, Спутник, Уфимская",
+    "Спутник, Усадебная",
+    "Спутник, Парковая",
+    "Чесноковка, ул Нагорная",
+    "Спутник",
+    "Чесноковка, Дачная",
+    "Зубово, перина",
+    "Чесноковка ",
+    "Зубово, молодежная",
+    "мкр. Спутник, ул.Сосновая",
+    "Чесноковка(СНТ) ",
+    "Чеснокова, парковая 18",
+    "спутник, Усадебная",
+    "Зубово, Парковая",
+    "Зубово, Серебряная"
+]
+
+const ch = [];
+const zub = [];
+const life = [];
+const sput = [];
+const neiz = [];
+
+mas.map((el) => {
+    if (el.search(/(Чесноковка)/i) !== -1 || el.search(/(Спутник)/i) !== -1
+        || el.search(/(Чеснаковка)/i) !== -1 || el.search(/(Чеснокова)/i) !== -1
+    ) {
+        if (el.search(/(Спутник)/i) !== -1) {
+            sput.push(el);
+        } else {
+            ch.push(el.slice(10).trim().length === 0 ? el + " - не указана улица" : el.slice(10));
+        }
+    } else if (el.search(/(Зубово)/i) !== -1 || el.search(/(Life)/i) !== -1) {
+        if (el.search(/(Life)/i) !== -1 || el.search(/(Лайф)/i) !== -1) {
+            life.push(el);
+        } else {
+            zub.push(el.slice(6).trim().length === 0 ? el + " - не указана улица" : el.slice(6));
+        }
+    } else {
+        neiz.push(el);
+    }
+})
+
+console.log(mas.length);
+console.log(ch.length);
+console.log(sput.length);
+console.log(zub.length);
+console.log(life.length);
+console.log(neiz.length);
+console.log("Чесноковка:");
+ch.map(el => console.log(el));
+sput.map(el => console.log(el));
+console.log("Зубово:");
+zub.map(el => console.log(el));
+life.map(el => console.log(el));
+neiz.map(el => console.log(el));
+
+2
+2
+3 года
+3
+2
+3
+Три года
+2 года
+3
+2
+1
+3
+4
+2 года
+5
+3
+8
+2
+6
+4
+2
+1 (я только переехала)
+5
+1
+3
+2  года
+2
+1
+1
+С момента подключения
+Живём семьь лет, все  семь лет испытываем проблемы
+3
+2 года
+2
+6
+1(только переехали)
+3
+5
+2
+2
+15
+2
+2
+1
+5
+3
+1
+6
+
+2020, 2021
+2019, 2020, 2021
+2021
+2019.2020.2021нет
+20,21
+2021,2020,2019,2018
+2020, 2021
+2029,2020,2021
+18,19,20,21
+2017,2018,2019,2020,2021
+2014,2015,2016,2017,2018,2019,2020,2021
+2019,2020,2021
+2021,2020,2019,2018,2017,2016
+2018, 2019, 2020,2021
+19, 20, 21
+2017-2021
+2015,2016,2917,2018,2010,2020,2021
+15,16,17,18,19,20,21
+2014, 2015, 2020, 2021
+2021, 2020, 2019, 2018
+2020,2021
+2016, 2017, 2018, 2019, 2020, 2021
+2018,2019,2020,2021
+2016,2017,2018,2019,2020,2021
 
 
-console.log('sdfghjkl;,mnbvcsewrtyuioplkfdsasdfghjkl;. cxsqwertyuiop[kjhgfdsaqwopkjhgfdsaячсмитьбжщшгнекуцйфывапролдтимсч'.length);
 
-console.log('https://bs.bregis.ru/api/bregis/ui/integrationterms/matching?source=d6b9a2e8-14c7-4322-a795-a8609452240f&destination=1ec774e9-6f08-4714-8239-2479ea3ba4fc&termType=services&currentPage=1&pageSize=10&searchType=sourceName&searchValue=Кровь&sortType=sourceName&sortValue=abc'.length);
-
-
-const sesTimeNum = parseInt("", 10);
-console.log(new Date().toISOString().slice(0, -1));
-console.log(0 % 2);
-console.log(5 % 2);
+2020, 2021
+2019, 2020, 2021
+2021
+2019.2020.2021нет
+20,21
+2021,2020,2019,2018
+2020, 2021
+2029,2020,2021
+18,19,20,21
+2017,2018,2019,2020,2021
+2014,2015,2016,2017,2018,2019,2020,2021
+2019,2020,2021
+2021,2020,2019,2018,2017,2016
+2018, 2019, 2020,2021
+19, 20, 21
+2017-2021
+2015,2016,2917,2018,2010,2020,2021
+15,16,17,18,19,20,21
+2014, 2015, 2020, 2021
+2021, 2020, 2019, 2018
+2020,2021
+2016, 2017, 2018, 2019, 2020, 2021
+2018,2019,2020,2021
+2016,2017,2018,2019,2020,2021

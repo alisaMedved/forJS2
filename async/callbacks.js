@@ -650,24 +650,24 @@
 
 // парочка фич date/key collect (коллектора) из metasync
 
-const dc = metasync
-    .collect(count)
-    .distinct()
-    .done((err, data) => {})
-
-// ключ значение ошибка (ну вдруг в поле надо записать ошибку а не значение) иои есть вероятность ошибки
-dc(key, error, value);
-
-// pick - запись элемента в поле
-dc.pick(key, value);
-// fail - запись ошибки
-dc.fail(key, error);
-fs.readFile(filename, dc.bind(null, key));
-// а вот если результат АФ ндо записать в поле с опред ключом
-// 1 арг - ключ поля
-// 2 - АФ
-// 3- аргументы АФ
-dc.take(key, fs.readFile, filename)
+// const dc = metasync
+//     .collect(count)
+//     .distinct()
+//     .done((err, data) => {})
+//
+// // ключ значение ошибка (ну вдруг в поле надо записать ошибку а не значение) иои есть вероятность ошибки
+// dc(key, error, value);
+//
+// // pick - запись элемента в поле
+// dc.pick(key, value);
+// // fail - запись ошибки
+// dc.fail(key, error);
+// fs.readFile(filename, dc.bind(null, key));
+// // а вот если результат АФ ндо записать в поле с опред ключом
+// // 1 арг - ключ поля
+// // 2 - АФ
+// // 3- аргументы АФ
+// dc.take(key, fs.readFile, filename)
 
 //а теперь подводим итоги с производительностью
 // promiseAll - 17
@@ -703,4 +703,101 @@ dc.take(key, fs.readFile, filename)
 // позволяющий обернуть класс, функцию или другой программный компонент
 // с несовместимым контрактом в программный компонент с контрактом, который нам нужен.
 
+// 1) адаптер из функции возвращающей промис
+// to callback-last / error-first contract
+
+// const promiseToCallbackLast = promise => callback => {
+//     promise.then(
+//         value => {
+//             callback(null, value);
+//         }
+//     ).catch(reason => {
+//         callback(reason);
+//     })
+// };
 //
+// const callbackify = fn => (...args) => {
+//     const callback = args.pop();
+//     promiseToCallbackLast(fn(...args))(callback);
+// };
+//
+// // usage
+//
+// async function FuncReturnPromise(par) {
+//     return new Promise((resolve, reject) => {
+//         setTimeout(() => {
+//             // return reject(par);
+//            return resolve(par)
+//         }, 4000);
+//     });
+// }
+//
+// const callbackFunction = callbackify(FuncReturnPromise);
+//
+// callbackFunction(60, (err, res) => {
+//  console.log("мяу мяу наш результат ", res);
+// });
+//
+// callbackFunction(new Error('ggggh'), (err, res) => {
+//     console.log("мяу мяу наша ошибка ", err);
+// });
+//
+// // 2) asyncify(fn) - приведена выше под именем toAsync - адаптер
+// // из синхронной функции to callback-last / error-first contract
+//
+// // 3) promiseToCallbackLast(promise, callback) - адаптер
+// // из промиса to callback-last / error-first contract - приведен выше
+//
+// // 4) promisify(fn) - адаптер
+// // из callback-last / error-first contract
+// // в функцию возвращающую промис - обратная 1
+//
+// const promisify = fn => (...args) =>
+//     new Promise((resolve, reject) => {
+//         fn(...args, (err, data) => {
+//             if (err) reject(err);
+//             else resolve(data);
+//         });
+//     });
+//
+// // использование:
+//
+// function loadScript(src, callback) {
+//     let script = document.createElement('script');
+//     script.src = src;
+//
+//     script.onload = () => callback(script);
+//     script.onerror = () => callback(new Error(`Ошибка загрузки скрипта ${src}`));
+//
+//     document.head.append(script);
+// }
+//
+// const loadScriptPromise = promisify(loadScript)('path/script.js')
+// loadScriptPromise
+//     .then((res) => {
+//         console.log(res)
+//     });
+
+// 5) promisifySync - адаптер
+// из синхронной функции в функцию возвращающую промис
+
+// const promisifySync = fn => (...args) => {
+//     let result;
+//     try {
+//         result = fn(...args);
+//     } catch (error) {
+//         return Promise.reject(error);
+//     }
+//     return Promise.resolve(result);
+// };
+//
+// // использование
+//
+// const syncFn = par => par;
+//
+// const promiseFn = promisifySync(syncFn)(5);
+// promiseFn
+//     .then((res) => {
+//         console.log(res)
+//     });
+
