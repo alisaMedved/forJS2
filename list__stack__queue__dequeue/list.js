@@ -19,15 +19,16 @@
 //
 //
 // console.dir(n1);
+// console.log(n1);
 // console.log('следующий \n');
 // console.dir(n2);
 // console.log('следующий \n');
 // console.dir(n3);
-// // console.log('следующий \n');
-// // console.dir(n4);
-// // console.log('следующий \n');
-// // console.dir(n5);
-//
+// console.log('следующий \n');
+// console.dir(n4);
+// console.log('следующий \n');
+// console.dir(n5);
+
 // /*
 // Интересный момент когда выписывается значение поля next то идет прямая итерация
 //  */
@@ -43,7 +44,7 @@
 // console.dir(n1);
 // console.dir(n2);
 // console.dir(n3);
-//
+
 // /*
 // Примечание: 1) Создание односвязного списка на функции-фабрике
 // vs
@@ -65,13 +66,13 @@
 //     return element;            // 1.2) вернули функцию element c полем data = obj1  // 2.6) вернули функцию element c полями data = obj2
 //                                                                                     //     и prev = функция element c полем data = obj1
 // };
-
+//
 // const obj1 = { name: 'first' };
 // const obj2 = { name: 'second' };
 // const obj3 = { name: 'third' };
 //
 // const list = node(obj1)(obj2)(obj3);
-
+//
 // console.dir(list, { depth: 3 });
 
 // Создание односвязного списка с помощью рекурсивного замыкания и примеси методом assign
@@ -126,9 +127,9 @@
 //         })
 //     };
 // };
-//
-// // Usage
-//
+
+// Usage
+
 // const obj1 = { name: 'first' };
 // const obj2 = { name: 'second' };
 // const obj3 = { name: 'third' };
@@ -178,6 +179,7 @@
 // у списка есть динамические методы
 // Стек (последним пришел - первым вышел)
 
+
 // function LinkedList() {    // функция-конструктор прототипа списка
 //     this.first = null;     // первый элемент списка
 //     this.last = null;                       // последний элемент списка
@@ -188,9 +190,14 @@
 //   const node = new Node(this, data);  // создаем элемент вызвав функцию-конструктор
 //                                       // абстракция элемента - объект
 //   node.prev = this.last;
-//   if (this.length === 0) this.first = node;
-//   else this.last.next = node;
+//   if (this.length === 0) {
+//       this.first = node;
+//   }
+//   else {
+//       this.last.next = node;
+//   }
 //   this.last = node;
+//   console.log('LAST ', this.last);
 //   this.length++;
 //   return node;
 // };
@@ -380,9 +387,42 @@
 // console.dir(list.shift());
 // console.dir(list.shift());
 
+// function digital_root(n) {
+//     return (n - 10) % 99 + 10;
+// }
+//
+// // console.log(digital_root(16));
+// console.log(digital_root(1129));
+// function flat(arr) {
+//     // console.log('arr ', arr)
+//     return arr.map(elm => {
+//         // console.log(arr, Array.isArray(elm) ? flat(elm) : elm);
+//         return Array.isArray(elm) ? flat(elm) : elm
+//     });
+// }
+// let mas = [];
+// function flatArray(arr) {
+//     const mas = [];
+//     arr.map(elm => {
+//         if (Array.isArray(elm)) {
+//             flatArray(elm)
+//         } else {
+//             mas.push(elm);
+//         }
+//     });
+//     return mas;
+// }
 
 
 
+// var number = (busStops) => {
+//     // console.log(flat(busStops));
+//     return flat(busStops).reduce((acc, elm, i) => {
+//         return i % 2 > 0 && i !== 0 ? acc - elm : acc + elm;
+//     }, 0)
+// }
+//
+// console.log(flatArray([[10,0],[3,5],[5,8]]));
 
-
-
+const a = {'asdr': 'tyy'}
+console.log(a.getValue());

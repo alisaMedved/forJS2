@@ -801,3 +801,23 @@
 //         console.log(res)
 //     });
 
+// new Promise((resolve, reject) => {
+//     console.log(5);
+//     return true;
+// })
+//     .then((res) => {
+//         return new Promise((resolve, reject) => {
+//             setTimeout(() => resolve('error'), 1000)
+//         })
+//     })
+//     .catch((e) => {
+//         console.log("reject! ", e);
+//     })
+//     .then((res) => {
+//         console.log("resolve! ", res);
+//     })
+
+const mas = [null];
+console.log([].join(', ').length);
+console.log(mas.join(', ').trim().length);
+

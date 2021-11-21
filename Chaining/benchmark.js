@@ -28,3 +28,11 @@ benchmark.do = (num, name, fn) => {
     for (i = 0; i < PRE_COUNT; i++) result.push(fn(() => {}));
     for (i = 0; i < num; i++) result.push(fn(next));
 };
+
+for (const item of array) {
+
+}
+
+for (i=0; i < array.length - 1; i++) {
+
+}
