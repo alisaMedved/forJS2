@@ -34,18 +34,20 @@ const query = person => (
         person.city === 'rom'
 );
 
-console.log(data);
+// console.log(data);
 
 data.forEach(person => {
-    Object.setPrototypeOf(person, Person.prototype);
-    // person.__proto__ = Person.prototype;
+    Object.setPrototypeOf(person, Person);
+    // person.__proto__ = Person;
+    console.log('888 ', person.__proto__);
+    console.log('999 ', Object.getPrototypeOf(person));
 });
 
-console.log(data + '');
-
-const res = data.filter(query);
-console.dir(res + '');
-
+// console.log(data + '');
+//
+// const res = data.filter(query);
+// console.dir(res + '');
+//
 console.log(Person.prototype);
 
 
