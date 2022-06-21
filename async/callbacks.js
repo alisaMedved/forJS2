@@ -164,38 +164,6 @@
 //
 // })();
 
-// class Proto {
-//     move() {
-//         console.log("динамический метод")
-//     }
-//     static more() {
-//         console.log("статический метод")
-//     }
-// }
-//
-// Proto.prototype.love = function() {
-//     console.log("динамический метод 2")
-// }
-//
-// Proto.lore = function() {
-//     console.log("статический метод 2")
-// }
-//
-// const potomok = new Proto();
-//
-// potomok.love()
-// potomok.move()
-//
-// // вызовет ошибку ведь статические методы не вызываются у потомков
-// // potomok.lore()
-// // potomok.more()
-//
-//
-// Proto.lore()
-// Proto.more()
-// Proto.prototype.love()
-// Proto.prototype.move()
-
 
 // const c1 = chain()
 //     .do(readConfig, "myConfig")
@@ -816,8 +784,35 @@
 //     .then((res) => {
 //         console.log("resolve! ", res);
 //     })
+//
+// const mas = [null];
+// console.log([].join(', ').length);
+// console.log(mas.join(', ').trim().length);
 
-const mas = [null];
-console.log([].join(', ').length);
-console.log(mas.join(', ').trim().length);
+const arg = {
+    name1: '1n',
+        value1: '1v',
+        name2: '2n',
+        value2: '2v',
+        name3: '3n',
+        value3: '3v',
+}
 
+// const handleSetBtn = (arg) => {
+//     const newCookiesObj = Object.entries(arg).reduce((acc, [key, value] ) => {
+//         if (acc[`${key.slice(key.length - 1)}`] && acc) {
+//             acc[`${key.slice(key.length - 1)}`][`${key.slice(0, key.length - 1)}`] = value;
+//         } else {
+//             acc[`${key.slice(key.length - 1)}`] = {};
+//             acc[`${key.slice(key.length - 1)}`][`${key.slice(0, key.length - 1)}`] = value;
+//         }
+//         return acc;
+//     }, {});
+//     return Object.values(newCookiesObj).reduce((acc, elm) =>  {acc.push(elm); return acc;}, []);
+// }
+//
+// console.log(handleSetBtn(arg))
+
+for (let i = 0; i < 3; (i += 1)) {
+    console.log(i + 1);
+}

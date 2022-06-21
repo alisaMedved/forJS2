@@ -25,6 +25,23 @@
 //
 // console.dir({ objConcat1, objConcat2 });
 
+// неперичеслчемые свойства (enumerable: false) и наследуемые не копируются
+
+// const obj = Object.create({ foo: 1 }, { // foo является унаследованным свойством.
+//     bar: {
+//         value: 2  // bar является неперечисляемым свойством.
+//     },
+//     baz: {
+//         value: 3,
+//         enumerable: true  // baz является собственным перечисляемым свойством.
+//     }
+// });
+//
+// const copy = Object.assign({}, obj);
+// console.log(copy); // { baz: 3 }
+//
+// console.log({v: 8, ...obj});
+
 // Склеивание массивов - одинаковые элементы не теряются
 
 // const mas1 = [12, 58, 69];
@@ -55,25 +72,27 @@
 
 // Итерация for-in-object и с помощью Object.keys(объект)
 
-const sim = Symbol('nord');
-
-const obj = {
-    key1: 'lll',
-    key2: 'kkkk',
-    [Symbol('nord')]: 'nord1', // по ключам символьного
-    [Symbol('nord')]: 'nord2',  // типа данных нельзя итерироваться
-};
-
-for (const key in obj) {
-    let value = obj[key];
-    console.log(key + ':' + value);
-}
-
-const mas = Object.keys(obj);
-for (const key of mas) {
-    let value = obj[key];
-    console.log(key + ':' + value);
-}
+// const sim = Symbol('nord');
+//
+// const obj = {
+//     key1: 'lll',
+//     key2: 'kkkk',
+//     [Symbol('nord')]: 'nord1', // по ключам символьного
+//     [Symbol('nord')]: 'nord2',  // типа данных нельзя итерироваться
+// };
+// Object.defineProperty(obj, 'rttyy', {value: 90, enumerable: true, configurable: true, writable: true });
+// // по ключам символьного типа данных нельзя итерироваться даже если поставлен дескриптор enumerable в true
+// Object.defineProperty(obj, Symbol('rttyyertr'), {value: 90, configurable: true, writable: true, enumerable: true });
+// for (const key in obj) {
+//     let value = obj[key];
+//     console.log(key + ':' + value);
+// }
+//
+// const mas = Object.keys(obj);
+// for (const key of mas) {
+//     let value = obj[key];
+//     console.log(key + ':' + value);
+// }
 
 // Запись объекта в файл
 
@@ -100,3 +119,84 @@ for (const key of mas) {
 //
 // save(hash1);
 // console.log(hash1);
+
+// 1) Заморозка объекта
+// const obj = {
+//     field1: 'otre',
+//     field2: 789,
+//     field455: {
+//         a: 7890,
+//         b: 7878990,
+//     }
+// }
+// Object.freeze(obj);
+// console.log(JSON.stringify(obj));
+//
+// // При заморозке нельзя добавлять новые свойства, удалять свойства, изменять уже  имеющиеся свойства
+// // obj.a = 67;
+// // obj.field1 = 'rtghjk';
+// // delete(obj.field1);
+//
+// // Заморозка неглубокая и потому во вложенных объектах можно удалять, изменять и добавлять свойства
+//
+// obj.field455.a = 67;
+// obj.field455.c = 'rtghjk';
+// delete(obj.field455.b);
+// console.log(JSON.stringify(obj));
+// console.log(Object.isFrozen(obj.field455));
+
+// 2) Метод freeze возвращает замороженный объект.
+// Оба объекта эквивалентны, а также возвращаемый объект будет заморожен.
+// Необязательно сохранять возвращаемый объект при заморозке оригинала.
+// const obj = {
+//     field1: 'otre',
+//     field2: 789,
+//     field455: {
+//         a: 7890,
+//         b: 7878990,
+//     }
+// }
+// const o = Object.freeze(obj);
+// //
+// console.log(o === obj); // true
+// console.log(o.field455.a === obj.field455.a); // true
+// console.log(Object.isFrozen(obj));
+// console.log(Object.isFrozen(o));
+
+// 3) метод freeze не замораживает эмуляцию геттеров и сетеров
+// let bValue = 45;
+// const obj = {
+//     field1: 'otre',
+//     field2: 789,
+//     field455: {
+//         a: 7890,
+//         b: 7878990,
+//     },
+//     get x() {
+//         return bValue;
+//     },
+//     set x(newValue) {
+//         bValue = newValue;
+//     }
+// }
+// // Object.defineProperty(obj, 'x',
+// //         {
+// //             get: function() {return bValue;},
+// //             set: function(newValue) {bValue = newValue},
+// //             enumerable: true,
+// //             configurable: true,
+// //     });
+//
+// console.log(obj.x);
+// obj.x = 789;
+// console.log(obj.x);
+//
+// Object.freeze(obj);
+//
+// console.log(obj.x);
+// obj.x = 900;
+// console.log(obj.x);
+// console.log(JSON.stringify(obj));
+
+
+
