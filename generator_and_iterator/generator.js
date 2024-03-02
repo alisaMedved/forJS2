@@ -2,16 +2,16 @@
 //
 //  //генератор через function declaration
 
- function* genFn(x) {
-     yield (x * 2);     // генераторы несколько раз возвращают значение через yield и лишь последний через return
-     return (x * 3);
- }
-
- console.log(genFn);
- console.log(genFn.toString());                  // у генераторов есть метод string прям как у функции
- console.log(typeof genFn);                      // typeof определяет генераторы как function
- const fnProto = Object.getPrototypeOf(genFn);
- console.log(fnProto.constructor.name);          // предсказуемо GeneratorFunction
+ // function* genFn(x) {
+ //     yield (x * 2);     // генераторы несколько раз возвращают значение через yield и лишь последний через return
+ //     return (x * 3);
+ // }
+ //
+ // console.log(genFn);
+ // console.log(genFn.toString());                  // у генераторов есть метод string прям как у функции
+ // console.log(typeof genFn);                      // typeof определяет генераторы как function
+ // const fnProto = Object.getPrototypeOf(genFn);
+ // console.log(fnProto.constructor.name);          // предсказуемо GeneratorFunction
 //  //
 //  // console.log(genFn(5));                      // Object [Generator] {}
 //  // console.log(typeof genFn(5));               // object
@@ -127,22 +127,25 @@
 //  // console.log(...id);
 //
 //
-//  // function* counter(begin, end, delta) {
-//  //     let value = begin;
-//  //     while (end > value) {
-//  //         value += delta;
-//  //         const back = yield value;
-//  //         if (back) value += back;
-//  //         console.log({ back, value });
-//  //     }
-//  // }
-//  //
-//  // const c = counter(0, 30, 12);
-//  // const val1 = c.next();
-//  // const val2 = c.next();
-//  // const val3 = c.next(150);
-//  // const val4 = c.next();
-//  // console.log({ c, val1, val2, val3, val4 });
+//  function* counter(begin, end, delta) {
+//      let value = begin;
+//      while (end > value) {
+//          value += delta;
+//          const back = yield value;
+//          if (back) value += back;
+//          console.log({ back, value });
+//      }
+//  }
+//
+//  const c = counter(0, 30, 12);
+//  const val1 = c.next();
+//  const val2 = c.next();
+//  const val3 = c.next(150);
+//  const val4 = c.next();
+//  const val5 = c.return(200);
+//  const val6 = c.next();
+// const val7 = c.return(400);
+//  console.log({ c, val1, val2, val3, val4, val5, val6, val7 });
 //
 //
 //  // function* counter(begin, end, delta) {
@@ -319,18 +322,18 @@
 // // // const val4 = c.next();
 // // // // console.log({ c, val1, val2, val3, val4 });
 // //
-// // // можно возвращать не просто значение а иттерируемый объект - yeld*
-// // // function* genFn() {
-// // //     yield* [10, 20, 30];
-// // //     //yield* new Set([10, 20, 30]);
-// // // }
-// // //
-// // // const c = genFn();
-// // // const val1 = c.next();
-// // // const val2 = c.next();
-// // // const val3 = c.next();
-// // // const val4 = c.next();
-// // // console.log({ c, val1, val2, val3, val4 });
+// можно возвращать не просто значение а иттерируемый объект - yeld*
+// function* genFn() {
+//     yield* [10, 20, 30];
+//     //yield* new Set([10, 20, 30]);
+// }
+//
+// const c = genFn();
+// const val1 = c.next();
+// const val2 = c.next();
+// const val3 = c.next();
+// const val4 = c.next();
+// console.log({ c, val1, val2, val3, val4 });
 // // //
 // // // // можно возвращать сам генератор
 // // // function* gen1() {
@@ -353,72 +356,72 @@
 // // // console.log('[...genFn()] =', [...genFn()]);
 // // //
 // // // // можно возврвщать  значение в генератор и  с помощью  return
-// // // function* genFn() {
-// // //     yield 10;
-// // //     yield 20;
-// // //     yield 30;
-// // // }
-// // // {
-// // //     const g = genFn();
-// // //     const val1 = g.next();
-// // //     const val2 = g.next();
-// // //     const val3 = g.next();
-// // //     const val4 = g.return(40);
-// // //     console.log({ val1, val2, val3, val4 });
-// // // }
-// // //
-// // // {
-// // //     const g = genFn();
-// // //     const val1 = g.next();
-// // //     const val2 = g.return(40);
-// // //     const val3 = g.next();
-// // //     const val4 = g.return(50);
-// // //     console.log({ val1, val2, val3, val4 });
-// // // }
+// function* genFn() {
+//     yield 10;
+//     yield 20;
+//     yield 30;
+// }
+// {
+//     const g = genFn();
+//     const val1 = g.next();
+//     const val2 = g.next();
+//     const val3 = g.next();
+//     const val4 = g.return(40);
+//     console.log({ val1, val2, val3, val4 });
+// }
+//
+// {
+//     const g = genFn();
+//     const val1 = g.next();
+//     const val2 = g.return(40);
+//     const val3 = g.next();
+//     const val4 = g.return(50);
+//     console.log({ val1, val2, val3, val4 });
+// }
 // //
 // // //
 // //
 // // //
-// // // function* genFn() {
-// // //     try {
-// // //         yield 10;
-// // //     } catch (err) {
-// // //         console.error('intercepted', err);
-// // //     }
-// // //     try {
-// // //         yield 20;
-// // //     } catch (err) {
-// // //         console.error('intercepted', err);
-// // //     }
-// // //     try {
-// // //         yield 30;
-// // //     } catch (err) {
-// // //         console.error('intercepted', err);
-// // //     }
-// // // }
-// // //
-// // // try {
-// // //     const g = genFn();
-// // //     // const val1 = g.next();
-// // //     // const val2 = g.next();
-// // //     // const val3 = g.next();
-// // //     const val4 = g.throw('Error message');
-// // //     console.log({ val1, val2, val3, val4 });
-// // // } catch (err) {
-// // //     console.error(err);
-// // // }
-// // //
-// // // try {
-// // //     const g = genFn();
-// // //     const val1 = g.next();
-// // //     const val2 = g.throw('Error message 1');
-// // //     const val3 = g.next();
-// // //     const val4 = g.throw('Error message 2');
-// // //     console.log({ val1, val2, val3, val4 });
-// // // } catch (err) {
-// // //     console.error(err);
-// // // }
-// //
+function* genFn() {
+    try {
+        yield 10;
+    } catch (err) {
+        console.error('intercepted', err);
+    }
+    try {
+        yield 20;
+    } catch (err) {
+        console.error('intercepted', err);
+    }
+    try {
+        yield 30;
+    } catch (err) {
+        console.error('intercepted', err);
+    }
+}
+
+// try {
+//     const g = genFn();
+//     const val1 = g.next();
+//     const val2 = g.next();
+//     const val3 = g.next();
+//     const val4 = g.throw('Error message');
+//     console.log({ val1, val2, val3, val4 });
+// } catch (err) {
+//     console.error(err);
+// }
+
+// try {
+//     const g = genFn();
+//     const val1 = g.next();
+//     const val2 = g.throw('Error message 1');
+//     const val3 = g.next();
+//     const val4 = g.throw('Error message 2');
+//     console.log({ val1, val2, val3, val4 });
+// } catch (err) {
+//     console.error(err);
+// }
+
 // // // ассинхронные генераторы
 // //
 // // // const asyncGenFn2 = async function* (x) {

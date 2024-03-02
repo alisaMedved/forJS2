@@ -367,5 +367,53 @@
 // // console.log("nowDate ", nowDate);
 // // console.log("nowMounth ", nowMounth);
 
-var myFish = ['angel', 'clown', 'mandarin', 'sturgeon', 'sturgeon1', 'sturgeon2', 'sturgeon3'];
-console.log(myFish.slice(0,3));
+// var myFish = ['angel', 'clown', 'mandarin', 'sturgeon', 'sturgeon1', 'sturgeon2', 'sturgeon3'];
+// console.log(myFish.slice(0,3));
+
+/**
+ * Короче у нас тут новый метод matchAll появился - ну он тоже как и match возвращает массив совпадений.
+ * Только у matchAll эл-ты в массивах не сами совпадения, а прям объекты посвященные им с подробной инфой
+ * об индексе о группе захвата и бла бла
+ */
+const regexp = /t(e)(st(\d?))/g;
+const str = 'test1 test2';
+
+console.log(str.match(regexp));
+
+console.log([...str.matchAll(regexp)]);
+
+// ну мы помним search это тупо проверка есть нет - индекс отдаст иначе -1 вернет
+console.log(str.search(regexp));
+
+// Аналоги
+// search от string = test от regexp условно - один индекс, второй boolean возвращает
+console.log(regexp.test(str));
+// matchAll от string и exec от regexp
+console.log(regexp.exec(str));
+// возникла странность
+
+// const str = "Быть или не быть, вот в чём вопрос.";
+//
+// console.log(str.startsWith("Быть")); // true
+// console.log(str.startsWith("не быть")); // false
+// console.log(str.startsWith("не быть", 9)); // true
+
+// У строк появились улучшенные учитывающие правила локали toLocaleLowerCase и тд
+
+// новые методы padEnd и padStart
+
+"abc".padEnd(10); // "abc       "
+"abc".padEnd(10, "foo"); // "abcfoofoof"
+"abc".padEnd(6, "123456"); // "abc123"
+
+"abc".padStart(10); // "       abc"
+"abc".padStart(10, "foo"); // "foofoofabc"
+"abc".padStart(6, "123465"); // "123abc"
+"abc".padStart(8, "0"); // "00000abc"
+"abc".padStart(1); // "abc"
+
+
+
+
+
+

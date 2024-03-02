@@ -63,39 +63,39 @@ maybe(5)(x => x*2)(x => ++ x)(console.log);
  полученный результат поместили в новое рекурсивное замыкание.
  **/
 
-// function Maybe(x) {                                     // аппликативный функтор
-//     this.x = x;
-// }
-//
-// Maybe.prototype.map = function(fn) {                     // метод аппликативного функтора map -
-//     const res = (this.x && fn) ? fn(this.x) : null;      // применяет предоставленную функцию к своему значению
-//     return res instanceof Maybe ? res : new Maybe(res);  // и запаковывает результат в новый функтор
-// };                                                      //не будет двойного оборачивания
-//
-// Maybe.prototype.ap = function(functor) {                // метод аппликативного функтора ap -
-//   return this.map(val => functor.map(f => f(val))
-//   );                                                    // распаковывает функциюиз другого функтора
-// };                                                      // и применяет ее к своему значению
-//
-// // добавили метод chain чтобы сделать монаду
-// Maybe.prototype.ch = function(fn) {
-//     return fn(this.x);
-// }
-//
-// const a = new Maybe(5);
-// const f1 = new Maybe(x => x * 2);
-// const f2 = new Maybe(x => ++x);
-// const f3 = x => new Maybe(x + 3)
-// a.ap(f1).ap(f2).ch(f3).map(console.log);
+function Maybe(x) {                                     // аппликативный функтор
+    this.x = x;
+}
+
+Maybe.prototype.map = function(fn) {                     // метод аппликативного функтора map -
+    const res = (this.x && fn) ? fn(this.x) : null;      // применяет предоставленную функцию к своему значению
+    return res instanceof Maybe ? res : new Maybe(res);  // и запаковывает результат в новый функтор
+};                                                      //не будет двойного оборачивания
+
+Maybe.prototype.ap = function(functor) {                // метод аппликативного функтора ap -
+  return this.map(val => functor.map(f => f(val))
+  );                                                    // распаковывает функциюиз другого функтора
+};                                                      // и применяет ее к своему значению
+
+// добавили метод chain чтобы сделать монаду
+Maybe.prototype.ch = function(fn) {
+    return fn(this.x);
+}
+
+const a = new Maybe(5);
+const f1 = new Maybe(x => x * 2);
+const f2 = new Maybe(x => ++x);
+const f3 = x => new Maybe(x + 3)
+a.ap(f1).ap(f2).ch(f3).map(console.log);
 
 // применение монады
 
-// const maybe = x => {
-//     const map = fn => maybe(x ? fn(x) : null);
-//     map.ap = functor => functor(f => x && f ? f(x) : null);
-//     map.chain = fn => x ? fn(x) : null;
-//     return map;
-// };
+const maybe = x => {
+    const map = fn => maybe(x ? fn(x) : null);
+    map.ap = functor => functor(f => x && f ? f(x) : null);
+    map.chain = fn => x ? fn(x) : null;
+    return map;
+};
 //
 // // Usage
 //

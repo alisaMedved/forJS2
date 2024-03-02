@@ -595,83 +595,83 @@
 
 //
 
-const wrap = func => {
-    let limit = 0;
-    let counter = 0;
-    let timer = null;
-    let fn = func;
+// const wrap = func => {
+//     let limit = 0;
+//     let counter = 0;
+//     let timer = null;
+//     let fn = func;
+//
+//     const wrapper = (...args) => {
+//         console.dir({ limit, counter, fn, args });
+//         if (!fn) {
+//             console.log('fn = null уже!');
+//             return;
+//         }
+//         if (limit && counter === limit) {
+//             console.log('Закончился лимит вызовов');
+//             limit = 0;
+//             counter = 0;
+//             wrapper.cancel();
+//             return;
+//         }
+//     const res = fn(...args);
+//     counter++;
+//     return res;
+//     };
+//
+//     const methods = {
+//         cancel() {
+//             fn = null;
+//             return this;
+//         },
+//         resume() {
+//             if (!fn) fn = func;
+//             return this;
+//         },
+//         timeout(msec) {
+//             if (timer) clearTimeout(timer);
+//             timer = setTimeout(() => this.cancel(), msec);
+//             return this;
+//         },
+//         limit(count) {
+//             limit = count || 0;
+//             counter = 0;
+//             return this;
+//         },
+//     };
+//
+//     return Object.assign(wrapper, methods);
+// };
 
-    const wrapper = (...args) => {
-        console.dir({ limit, counter, fn, args });
-        if (!fn) {
-            console.log('fn = null уже!');
-            return;
-        }
-        if (limit && counter === limit) {
-            console.log('Закончился лимит вызовов');
-            limit = 0;
-            counter = 0;
-            wrapper.cancel();
-            return;
-        }
-    const res = fn(...args);
-    counter++;
-    return res;
-    };
-
-    const methods = {
-        cancel() {
-            fn = null;
-            return this;
-        },
-        resume() {
-            if (!fn) fn = func;
-            return this;
-        },
-        timeout(msec) {
-            if (timer) clearTimeout(timer);
-            timer = setTimeout(() => this.cancel(), msec);
-            return this;
-        },
-        limit(count) {
-            limit = count || 0;
-            counter = 0;
-            return this;
-        },
-    };
-
-    return Object.assign(wrapper, methods);
-};
-
-const fn = par => {
-    console.log('Function called, par:', par);
-};
-
-const f = wrap(fn).timeout(200).limit(3);
-f('1st');
-
-setTimeout(() => {
-    f('2nd');
-    f.cancel();
-    f('3rd');
-    f.resume();
-    f('4th');
-    f.timeout(200);
-    setTimeout(() => {
-        f('5th');
-        setTimeout(() => {
-            f.limit(1);
-            f('6th'); /* при 5th limit: 3, counter: 3, -применили cancel() - fn = null;
-             на момент 6th fn все также оставалась null и не было resue что могла б
-            востановить ссылку fn а counter=1, limit =0; */
-
-            f('7th');
-            f.resume();
-            f('8th'); /* из-за того что функция fn так и не выполнялась то и counter
-              не увеличился и потому к моменту 8 th сохранились counter=1, limit =0; */
-        }, 150);
-    }, 150);
-}, 150);
+// const fn = par => {
+//     console.log('Function called, par:', par);
+// };
+//
+// const f = wrap(fn).timeout(200).limit(3);
+// f('1st');
+//
+// setTimeout(() => {
+//     f('2nd');
+//     f.cancel();
+//     f('3rd');
+//     f.resume();
+//     f('4th');
+//     f.timeout(200);
+//     setTimeout(() => {
+//         f('5th');
+//         setTimeout(() => {
+//             f.limit(1);
+//             f('6th'); /* при 5th limit: 3, counter: 3, -применили cancel() - fn = null;
+//              на момент 6th fn все также оставалась null и не было resue что могла б
+//             востановить ссылку fn а counter=1, limit =0; */
+//
+//             f('7th');
+//             f.resume();
+//             f('8th'); /* из-за того что функция fn так и не выполнялась то и counter
+//               не увеличился и потому к моменту 8 th сохранились counter=1, limit =0; */
+//         }, 150);
+//     }, 150);
+// }, 150);
 
 
 

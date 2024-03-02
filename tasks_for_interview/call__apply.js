@@ -19,21 +19,21 @@ const r = new Boolean(0);
 console.log('0 ', r)
 //
 // // задача на call apply bind
-// function func () {
-//     console.log(this.a);
-// }
-//
-// const obj = {
-//     a: 5,
-//     func
-// }
-//
-// const bar = obj.func;
-// const bindBar = bar.bind(obj);
-// bar.call(obj);
-// bar.apply(obj, null);
-// bindBar();
-// bar();
+function func () {
+    console.log(this.a);
+}
+
+const obj = {
+    a: 5,
+    func
+}
+
+const bar = obj.func;
+const bindBar = bar.bind(obj);
+bar.call(obj);
+bar.apply(obj, null);
+bindBar();
+bar();
 
 //разница между стрелочной и function
 
