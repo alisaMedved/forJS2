@@ -114,21 +114,21 @@ for (const value of iteratorOfArray3) {
 //     }
 // }
 //
-// (async () => {
-//     console.time("Array.fromAsync() time");
-//     const arrayOfResolvedValues1 = await Array.fromAsync(makeIterableOfPromises());
-//     console.timeEnd("Array.fromAsync() time");
-//     // Array.fromAsync() time: 503.610ms
-//
-//     console.log('arrayOfResolvedValues1 ', arrayOfResolvedValues1)
-//
-//     console.time("Promise.all() time");
-//     const arrayOfResolvedValues2 = await Promise.all(makeIterableOfPromises());
-//     console.timeEnd("Promise.all() time");
-//     // Promise.all() time: 101.728ms
-//
-//     console.log('arrayOfResolvedValues2 ', arrayOfResolvedValues2)
-// })();
+(async () => {
+    console.time("Array.fromAsync() time");
+    const arrayOfResolvedValues1 = await Array.fromAsync(makeIterableOfPromises());
+    console.timeEnd("Array.fromAsync() time");
+    // Array.fromAsync() time: 503.610ms
+
+    console.log('arrayOfResolvedValues1 ', arrayOfResolvedValues1)
+
+    console.time("Promise.all() time");
+    const arrayOfResolvedValues2 = await Promise.all(makeIterableOfPromises());
+    console.timeEnd("Promise.all() time");
+    // Promise.all() time: 101.728ms
+
+    console.log('arrayOfResolvedValues2 ', arrayOfResolvedValues2)
+})();
 
 // Пример №7 Новые немутирующие методы toSorted toSpliced toReversed
 

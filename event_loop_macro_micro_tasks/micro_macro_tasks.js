@@ -2,7 +2,7 @@
 
 const timer = msec => {
     const end = new Date().getTime() + msec;
-    while (new Date().getTime() < end);
+    do {} while(new Date().getTime() < end)
 };
 
 console.log('Start timer: ' + new Date().toISOString());
@@ -34,7 +34,7 @@ const sleep = msec => new Promise(resolve => {
 // и нельзя будет кликать выделять и отправлять и делать другие вещи до тех пор пока
 // callstack не очистится
 
-// промис передается в callstack но з него сразу же в web api
+// промис передается в callstack но из него сразу же в web api
 // и когда протикает время колбек промиса придет в task queue. и callstack сразу же освобождается при передачи
 //в web api
 // Callstack не занят и к тому же события из render queue имеют более высокий приоритет чем соытия из
@@ -152,7 +152,7 @@ console.log('main ended');
 // process.hrtime - в ноде выдает время текущее в наносекундах
 const begin = process.hrtime.bigint();
 
-const diff = end => (end - begin) / 1000000;
+const diff = end => (end - begin) / 1000000n;
 
 setTimeout(() => {
     const end = process.hrtime.bigint();

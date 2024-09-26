@@ -927,3 +927,18 @@ function* genFn() {
 //
 // console.log(a[b]);
 
+// const mas = [21, 20, 19, 18, 16, 15, 14, 13, 12, 11, 9, 10, 17, 8, 7, 6, 5, 3, 2, 1, 0, 4, 22]
+//     const l = mas.sort((a, b) => {if (a > b) {return 1;} else {return -1;}})
+//
+// console.log(l);
+
+ const getFormattedIdsForDeletingGames = (ids: string[]): object => {
+    logger.info(ids)
+    return ids.reduce((acc, elm, index) => {
+        acc[`where[id][in][${index}]`] = elm;
+        return acc;
+    }, {})
+}
+
+const g = getFormattedIdsForDeletingGames(['ghjkk', 'yuyui', 'tyjjm'])
+console.log(g)
