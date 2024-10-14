@@ -367,78 +367,78 @@
 // debounce - раз в сколько минут допускается единичный вызов функции
 // utils - возвращает функтор у которого все методы выше описанные
 
-// const utils = fn => {
-//     const wrapper = (...args) => {
-//         console.log(...args);
-//         if (fn && wrapper.col !== 0) {
-//                 if (wrapper.col !== undefined) {
-//                     wrapper.col = wrapper.col - 1;
-//                 }
-//                     wrapper.res(fn(...args));
-//                     return wrapper;
-//         }
-//     }
-//     wrapper.col = undefined;
-//     wrapper.timeDeb = false;
-//     wrapper.res = (par) => {
-//         return par;
-//     }
-//     wrapper.cancel = () => {
-//         fn = null;
-//         return wrapper;
-//     };
-//     wrapper.once = () => {
-//             if (wrapper.col !== 0 && !wrapper.timeDeb) {
-//                 wrapper.col = 1
-//             }
-//             return wrapper;
-//         }
-//     wrapper.limit = (col) => {
-//         if (wrapper.col !== 0 && !wrapper.timeDeb) {
-//             wrapper.col = col;
-//         }
-//         return wrapper;
-//     }
-//     wrapper.timeout = (msec) => {
-//         setTimeout(() => {
-//             fn = null;
-//         }, msec);
-//         return wrapper;
-//     }
-//     wrapper.debounce = (msec) => {
-//         wrapper.timeDeb = true;
-//         wrapper.col = 1;
-//         setInterval(() => {
-//             wrapper.col = 1;
-//             console.log("куку");
-//         }, msec);
-//         return wrapper;
-//     }
-//     wrapper.throttle = (colc, msec) => {
-//         wrapper.timeDeb = true;
-//         wrapper.col = colc;
-//         setInterval(() => {
-//             wrapper.col = colc;
-//         }, msec);
-//         return wrapper;
-//     }
-//     return wrapper;
-// }
+const utils = fn => {
+    const wrapper = (...args) => {
+        console.log(...args);
+        if (fn && wrapper.col !== 0) {
+                if (wrapper.col !== undefined) {
+                    wrapper.col = wrapper.col - 1;
+                }
+                    wrapper.res(fn(...args));
+                    return wrapper;
+        }
+    }
+    wrapper.col = undefined;
+    wrapper.timeDeb = false;
+    wrapper.res = (par) => {
+        return par;
+    }
+    wrapper.cancel = () => {
+        fn = null;
+        return wrapper;
+    };
+    wrapper.once = () => {
+            if (wrapper.col !== 0 && !wrapper.timeDeb) {
+                wrapper.col = 1
+            }
+            return wrapper;
+        }
+    wrapper.limit = (col) => {
+        if (wrapper.col !== 0 && !wrapper.timeDeb) {
+            wrapper.col = col;
+        }
+        return wrapper;
+    }
+    wrapper.timeout = (msec) => {
+        setTimeout(() => {
+            fn = null;
+        }, msec);
+        return wrapper;
+    }
+    wrapper.debounce = (msec) => {
+        wrapper.timeDeb = true;
+        wrapper.col = 1;
+        setInterval(() => {
+            wrapper.col = 1;
+            console.log("куку");
+        }, msec);
+        return wrapper;
+    }
+    wrapper.throttle = (colc, msec) => {
+        wrapper.timeDeb = true;
+        wrapper.col = colc;
+        setInterval(() => {
+            wrapper.col = colc;
+        }, msec);
+        return wrapper;
+    }
+    return wrapper;
+}
 //
 // //usage
 //
-// const fn = par => {
-//     console.log('Function called, par: ' + par);
-// }
-// const f = utils(fn).limit(3)("8")("0").cancel()("788")
-// // const f1 = utils(fn).limit(3)("8")("0")("788").debounce(25000)
-// // setInterval(() => {
-// //     f1("7888889")
-// // }, 10000)
-// const f1 = utils(fn).limit(3)("8")("0")("788").throttle(2, 24000)
+const fn = par => {
+    console.log('Function called, par: ' + par);
+}
+const f = utils(fn).limit(3)("8")("0").cancel()("788")
+// const f1 = utils(fn).limit(3)("8")("0")("788").debounce(25000)
 // setInterval(() => {
 //     f1("7888889")
-// }, 5000)
+// }, 10000)
+const f1 = utils(fn).limit(3)("8")("0")("788").throttle(2, 24000)
+setInterval(() => {
+    f1("7888889")
+}, 5000)
 
 // // встроенные в ноду функции
 //

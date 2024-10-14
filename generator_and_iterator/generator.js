@@ -1,368 +1,372 @@
-//  'use strict';
-//
-//  //генератор через function declaration
+ // 'use strict';
+
+ //генератор через function declaration
 
  // function* genFn(x) {
  //     yield (x * 2);     // генераторы несколько раз возвращают значение через yield и лишь последний через return
  //     return (x * 3);
  // }
- //
+
  // console.log(genFn);
  // console.log(genFn.toString());                  // у генераторов есть метод string прям как у функции
  // console.log(typeof genFn);                      // typeof определяет генераторы как function
  // const fnProto = Object.getPrototypeOf(genFn);
  // console.log(fnProto.constructor.name);          // предсказуемо GeneratorFunction
-//  //
-//  // console.log(genFn(5));                      // Object [Generator] {}
-//  // console.log(typeof genFn(5));               // object
-//  // console.log(genFn(5).toString());           //
-//  // const genProto = Object.getPrototypeOf(genFn(5));
-//  // console.log(genProto);
-//  // console.log(genProto[Symbol.iterator]);             // есть иттератор
-//  // console.log(genFn(5).next());
-//  // console.log(genFn(5).next().value, genFn(5).next().value);
-//  //
-//  //
-//  //
-//  //
-//  // // генератор через динамический метод class
-//  //
-//  // class Multiplier {
-//  //     constructor(k) {
-//  //         this.value = k;
-//  //     }
-//  //     * genMethod(a) {
-//  //         this.value = a * this.value;
-//  //         return a * this.value;
-//  //     }
-//  // }
-//  //
-//  // // генератор через метод объекта
-//  //
-//  // const m2 = {
-//  //     value: 2,
-//  //
-//  //     * genMethod(a) {
-//  //         yield this.value;
-//  //         this.value = this.value * a;
-//  //         return this.value;
-//  //     }
-//  // };
-//  //
-//  // function genFnY(x) {
-//  //     return (x * 3);
-//  // }
-//
-//  // function* counter(begin, end, delta) {
-//  //     let value = begin;
-//  //     while (end > value) {
-//  //       value += delta;
-//  //         if (value > end) return;
-//  //       yield value;
-//  //     }
-//  // }
-//  //
-//  // function* counter(begin, end, delta) {
-//  //     let value = begin;
-//  //     while (end > value) {
-//  //         value += delta;
-//  //         // если элемент даже не последний и- вернет done: true потому что вернут через return
-//  //         if (value === 24) return value;
-//  //         yield value;
-//  //     }
-//  // }
-//  //
-//  // const c = counter(0, 30, 12); //Object [Generator] {},  - иттератор
-//  // const val1 = c.next();
-//  // const val2 = c.next();
-//  // const val3 = c.next();
-//  // const val4 = c.next();
-//  // console.log({c, val1, val2, val3, val4});
-//
-//  // function* ids(...args) {
-//  //     let i = 0;
-//  //     while (args.length > i) {
-//  //         // не путай ++ это же пост операция
-//  //         const id = args[i++];
-//  //         if (id === undefined) return;
-//  //         yield id;
-//  //     }
-//  // }
-//  //
-//  // const id = ids(1011, 1078, 1292, 1731, undefined, 1501, 1550);
-//  // let val;
-//  // do {
-//  //     val = id.next();
-//  //     console.log({ val });
-//  // } while (!val.done);
-//
-//  // function* ids(...args) {
-//  //     let i = 0;
-//  //     while (args.length > i) {
-//  //         const id = args[i++];
-//  //         if (id === undefined) return;
-//  //         yield id;
-//  //     }
-//  // }
-//  //
-//  // // мы можем иттерироваться по иттератору циклом for of
-//  // const id = ids(1011, 1078, 1292, 1731, undefined, 1501, 1550);
-//  // здесь ясно дело не будет возвращаться объект done value какой возвращает иттератор
-//  // ибо аод капотом for of вытаскивает для нас чистое value
-//  // for (const val of id) {
-//  //     console.log({ val });
-//  // }
-//
-//  // function* ids(...args) {
-//  //     let i = 0;
-//  //     while (args.length > i) {
-//  //         const id = args[i++];
-//  //         if (id === undefined) return;
-//  //         yield id;
-//  //     }
-//  // }
-//  //
-//  // const id = ids(1011, 1078, 1292, 1731, undefined, 1501, 1550);
-//  // // спред оператор тот же эффект что и for of
-//  // console.log(...id);
-//
-//
-//  function* counter(begin, end, delta) {
-//      let value = begin;
-//      while (end > value) {
-//          value += delta;
-//          const back = yield value;
-//          if (back) value += back;
-//          console.log({ back, value });
-//      }
-//  }
-//
-//  const c = counter(0, 30, 12);
-//  const val1 = c.next();
-//  const val2 = c.next();
-//  const val3 = c.next(150);
-//  const val4 = c.next();
-//  const val5 = c.return(200);
-//  const val6 = c.next();
-// const val7 = c.return(400);
-//  console.log({ c, val1, val2, val3, val4, val5, val6, val7 });
-//
-//
-//  // function* counter(begin, end, delta) {
-//  //     let value = begin;
-//  //     while (end > value) {
-//  //         value += delta;
-//  //         console.log({ value });
-//  //         yield value;
-//  //     }
-//  // }
-//  //
-//  // const c = counter(0, 30, 12);
-//  // const val1 = c.next();
-//  // const val2 = c.next();
-//  // const val3 = c.next(150);
-//  // const val4 = c.next();
-//  // console.log({ c, val1, val2, val3, val4 });
-//
-//
-//  // из генератора можно возвращать и не итератор - а любой иттерируемый - например массив или set - хеш мапу и так далее
-//  // главное написать yield*
-//  // вернее вернется иттератор конткретно этого иттерируемого
-//
-//  // function* genFn() {
-//  //     yield* [10, 20, 30];
-//  //     //yield* new Set([10, 20, 30]);
-//  // }
-//  //
-//  // const c = genFn();
-//  // const val1 = c.next();
-//  // const val2 = c.next();
-//  // const val3 = c.next();
-//  // const val4 = c.next();
-//  // console.log({ c, val1, val2, val3, val4 });
-//
-//  // вот этот генератор вернет иттератор эдакого массива (но это не массив) 10 20 30
-//  // просто эффект тот же что и с массивом
-//  // function* gen1() {
-//  //     yield 10;
-//  //     yield 20;
-//  //     yield 30;
-//  // }
-//  //
-//  // // вот этот генератор вернет иттератор конкретного массива [10 20 30 ]
-//  // function* gen3() {
-//  //     yield* [10, 20, 30];
-//  // }
-//  //
-//  // function* gen2() {
-//  //     yield 40;
-//  //     yield 50;
-//  //     yield 60;
-//  // }
-//  //
-//  // // тупо возвращает то что возвращают генераторы
-//  // function* genFn() {
-//  //     yield* gen1();
-//  //     yield* gen2();
-//  // }
-//  //
-//  // console.log('[...genFn()] =', genFn().next());
-//
-//  // так Тимур сказал что методы у генераторов return throw ненужные, но что они делают  рассказал
-//
-//  // function* genFn() {
-//  //     yield 10;
-//  //     yield 20;
-//  //     yield 30;
-//  // }
-//  //
-//  // {
-//  //     const g = genFn();
-//  //     const val1 = g.next();
-//  //     const val2 = g.next();
-//  //     const val3 = g.next();
-//  //     // также как yield только return и после него yield будет возвращать done: true value: undefined
-//  //     const val4 = g.return(40);
-//  //     console.log({ val1, val2, val3, val4 });
-//  // }
-//  //
-//  // {
-//  //     const g = genFn();
-//  //     const val1 = g.next();
-//  //     const val2 = g.return(40);
-//  //     const val3 = g.next();
-//  //     const val4 = g.return(50);
-//  //     console.log({ val1, val2, val3, val4 });
-//  // }
-//
-//  // а вот метод throw
-//
-//  // function* genFn() {
-//  //     try {
-//  //         yield 10;
-//  //     } catch (err) {
-//  //         console.error('intercepted', err);
-//  //     }
-//  //     try {
-//  //         yield 20;
-//  //     } catch (err) {
-//  //         console.error('intercepted', err);
-//  //     }
-//  //     try {
-//  //         yield 30;
-//  //     } catch (err) {
-//  //         // в первые вижу что с консоль так можно - прикольно
-//  //         console.error('intercepted', err);
-//  //     }
-//  // }
-//
-//  // try {
-//  //     const g = genFn();
-//  //     const val1 = g.next();
-//  //     const val2 = g.next();
-//  //     const val3 = g.next();
-//  //     const val4 = g.throw('Error message');
-//  //     console.log({ val1, val2, val3, val4 });
-//  // } catch (err) {
-//  //     console.error(err);
-//  // }
-//  //
-//  // try {
-//  //     const g = genFn();
-//  //     const val1 = g.next();
-//  //     const val2 = g.throw('Error message 1');
-//  //     const val3 = g.next();
-//  //     const val4 = g.throw('Error message 2');
-//  //     console.log({ val1, val2, val3, val4 });
-//  // } catch (err) {
-//  //     console.error(err);
-//  // }
-//
-//  // Синхронный генератор - это функция которая может несколько раз возвращать значение,
-//  // до return - при return  она вернет значение в последний раз - а если вызвать результат функции через next
-//  // выдасть то значение на котором сейчас иттерация - и до return хранит в себе значение
-//  // вообще вместо значение - я поставила бы иттератор
-//
-//  // https://youtu.be/kvNm9D32s8s?list=PLHhi8ymDMrQZad6JDh6HRzY1Wz5WB34w0&t=1821
-// // // //
-// // // //
-// // // // class Multiplier {
-// // // //     constructor(k) {
-// // // //         this.value = k;
-// // // //     }
-// // // //
-// // // //     * genMethod(a) {
-// // // //         yield this.value;
-// // // //         this.value = this.value * a;
-// // // //         return this.value;
-// // // //     }
-// // // // }
-// // // //
-// // // // const m1 = new Multiplier(2);
-// // // // const m2 = m1.genMethod(5);
-// // // // console.log('m1.genMethod(5).next() =', m2.next());
-// // // // console.log('m1.genMethod(5).next() =', m2.next());
+ //
+ // console.log(genFn(5));                      // Object [Generator] {}
+ // console.log(typeof genFn(5));               // object
+ // console.log(genFn(5).toString());           //
+ // const genProto = Object.getPrototypeOf(genFn(5));
+ // console.log(genProto);
+ // console.log(genProto[Symbol.iterator]);             // есть иттератор
+ // console.log(genFn(5).next());
+ // console.log(genFn(5).next().value, genFn(5).next().value);
+ // const c = genFn(5);
+ // console.log(c.next());
+ // console.log(c.next());
+
+ //
+ //
+ //
+ //
+ // // генератор через динамический метод class
+ //
+ // class Multiplier {
+ //     constructor(k) {
+ //         this.value = k;
+ //     }
+ //     * genMethod(a) {
+ //         this.value = a * this.value;
+ //         return a * this.value;
+ //     }
+ // }
+ //
+ // // генератор через метод объекта
+ //
+ // const m2 = {
+ //     value: 2,
+ //
+ //     * genMethod(a) {
+ //         yield this.value;
+ //         this.value = this.value * a;
+ //         return this.value;
+ //     }
+ // };
+ //
+ // function genFnY(x) {
+ //     return (x * 3);
+ // }
+
+ // function* counter(begin, end, delta) {
+ //     let value = begin;
+ //     while (end > value) {
+ //       value += delta;
+ //         if (value > end) return;
+ //       yield value;
+ //     }
+ // }
+ //
+ // function* counter(begin, end, delta) {
+ //     let value = begin;
+ //     while (end > value) {
+ //         value += delta;
+ //         // если элемент даже не последний и- вернет done: true потому что вернут через return
+ //         if (value === 24) return value;
+ //         yield value;
+ //     }
+ // }
+ //
+ // const c = counter(0, 30, 12); //Object [Generator] {},  - иттератор
+ // const val1 = c.next();
+ // const val2 = c.next();
+ // const val3 = c.next();
+ // const val4 = c.next();
+ // console.log({c, val1, val2, val3, val4});
+
+ // function* ids(...args) {
+ //     let i = 0;
+ //     while (args.length > i) {
+ //         // не путай ++ это же пост операция
+ //         const id = args[i++];
+ //         if (id === undefined) return;
+ //         yield id;
+ //     }
+ // }
+ //
+ // const id = ids(1011, 1078, 1292, 1731, undefined, 1501, 1550);
+ // let val;
+ // do {
+ //     val = id.next();
+ //     console.log({ val });
+ // } while (!val.done);
+
+ // function* ids(...args) {
+ //     let i = 0;
+ //     while (args.length > i) {
+ //         const id = args[i++];
+ //         if (id === undefined) return;
+ //         yield id;
+ //     }
+ // }
+ //
+ // // мы можем иттерироваться по иттератору циклом for of
+ // const id = ids(1011, 1078, 1292, 1731, undefined, 1501, 1550);
+ // здесь ясно дело не будет возвращаться объект done value какой возвращает иттератор
+ // ибо аод капотом for of вытаскивает для нас чистое value
+ // for (const val of id) {
+ //     console.log({ val });
+ // }
+
+ // function* ids(...args) {
+ //     let i = 0;
+ //     while (args.length > i) {
+ //         const id = args[i++];
+ //         if (id === undefined) return;
+ //         yield id;
+ //     }
+ // }
+ //
+ // const id = ids(1011, 1078, 1292, 1731, undefined, 1501, 1550);
+ // // спред оператор тот же эффект что и for of
+ // console.log(...id);
+
+
+ function* counter(begin, end, delta) {
+     let value = begin;
+     while (end > value) {
+         value += delta;
+         const back = yield value;
+         if (back) value += back;
+         console.log({ back, value });
+     }
+ }
+
+ const c = counter(0, 30, 12);
+ const val1 = c.next();
+ const val2 = c.next();
+ const val3 = c.next(150);
+ const val4 = c.next();
+ const val5 = c.return(200);
+ const val6 = c.next();
+const val7 = c.return(400);
+ console.log({ c, val1, val2, val3, val4, val5, val6, val7 });
+
+
+ // function* counter(begin, end, delta) {
+ //     let value = begin;
+ //     while (end > value) {
+ //         value += delta;
+ //         console.log({ value });
+ //         yield value;
+ //     }
+ // }
+ //
+ // const c = counter(0, 30, 12);
+ // const val1 = c.next();
+ // const val2 = c.next();
+ // const val3 = c.next(150);
+ // const val4 = c.next();
+ // console.log({ c, val1, val2, val3, val4 });
+
+
+ // из генератора можно возвращать и не итератор - а любой иттерируемый - например массив или set - хеш мапу и так далее
+ // главное написать yield*
+ // вернее вернется иттератор конткретно этого иттерируемого
+
+ // function* genFn() {
+ //     yield* [10, 20, 30];
+ //     //yield* new Set([10, 20, 30]);
+ // }
+ //
+ // const c = genFn();
+ // const val1 = c.next();
+ // const val2 = c.next();
+ // const val3 = c.next();
+ // const val4 = c.next();
+ // console.log({ c, val1, val2, val3, val4 });
+
+ // вот этот генератор вернет иттератор эдакого массива (но это не массив) 10 20 30
+ // просто эффект тот же что и с массивом
+ // function* gen1() {
+ //     yield 10;
+ //     yield 20;
+ //     yield 30;
+ // }
+ //
+ // // вот этот генератор вернет иттератор конкретного массива [10 20 30 ]
+ // function* gen3() {
+ //     yield* [10, 20, 30];
+ // }
+ //
+ // function* gen2() {
+ //     yield 40;
+ //     yield 50;
+ //     yield 60;
+ // }
+ //
+ // // тупо возвращает то что возвращают генераторы
+ // function* genFn() {
+ //     yield* gen1();
+ //     yield* gen2();
+ // }
+ //
+ // console.log('[...genFn()] =', genFn().next());
+
+ // так Тимур сказал что методы у генераторов return throw ненужные, но что они делают  рассказал
+
+ // function* genFn() {
+ //     yield 10;
+ //     yield 20;
+ //     yield 30;
+ // }
+ //
+ // {
+ //     const g = genFn();
+ //     const val1 = g.next();
+ //     const val2 = g.next();
+ //     const val3 = g.next();
+ //     // также как yield только return и после него yield будет возвращать done: true value: undefined
+ //     const val4 = g.return(40);
+ //     console.log({ val1, val2, val3, val4 });
+ // }
+ //
+ // {
+ //     const g = genFn();
+ //     const val1 = g.next();
+ //     const val2 = g.return(40);
+ //     const val3 = g.next();
+ //     const val4 = g.return(50);
+ //     console.log({ val1, val2, val3, val4 });
+ // }
+
+ // а вот метод throw
+
+ // function* genFn() {
+ //     try {
+ //         yield 10;
+ //     } catch (err) {
+ //         console.error('intercepted', err);
+ //     }
+ //     try {
+ //         yield 20;
+ //     } catch (err) {
+ //         console.error('intercepted', err);
+ //     }
+ //     try {
+ //         yield 30;
+ //     } catch (err) {
+ //         // в первые вижу что с консоль так можно - прикольно
+ //         console.error('intercepted', err);
+ //     }
+ // }
+
+ // try {
+ //     const g = genFn();
+ //     const val1 = g.next();
+ //     const val2 = g.next();
+ //     const val3 = g.next();
+ //     const val4 = g.throw('Error message');
+ //     console.log({ val1, val2, val3, val4 });
+ // } catch (err) {
+ //     console.error(err);
+ // }
+ //
+ // try {
+ //     const g = genFn();
+ //     const val1 = g.next();
+ //     const val2 = g.throw('Error message 1');
+ //     const val3 = g.next();
+ //     const val4 = g.throw('Error message 2');
+ //     console.log({ val1, val2, val3, val4 });
+ // } catch (err) {
+ //     console.error(err);
+ // }
+
+ // Синхронный генератор - это функция которая может несколько раз возвращать значение,
+ // до return - при return  она вернет значение в последний раз - а если вызвать результат функции через next
+ // выдасть то значение на котором сейчас иттерация - и до return хранит в себе значение
+ // вообще вместо значение - я поставила бы иттератор
+
+ // https://youtu.be/kvNm9D32s8s?list=PLHhi8ymDMrQZad6JDh6HRzY1Wz5WB34w0&t=1821
 // // //
-// // // function* counter(begin, end, delta) {
-// // //     let value = begin;
-// // //     while (end > value) {
-// // //         value += delta;
-// // //         console.log({valueBefore: value });
-// // //         const back = yield value;
-// // //         console.log({backBefore: back });
-// // //         if (back) value += back;
-// // //         console.log({value, back });
+// // //
+// // // class Multiplier {
+// // //     constructor(k) {
+// // //         this.value = k;
+// // //     }
+// // //
+// // //     * genMethod(a) {
+// // //         yield this.value;
+// // //         this.value = this.value * a;
+// // //         return this.value;
 // // //     }
 // // // }
 // // //
-// // // const c = counter(0, 30, 12);
-// // // const val1 = c.next();
-// // // const val2 = c.next();
-// // // const val3 = c.next(150);
-// // // const val4 = c.next();
-// // // // console.log({ c, val1, val2, val3, val4 });
+// // // const m1 = new Multiplier(2);
+// // // const m2 = m1.genMethod(5);
+// // // console.log('m1.genMethod(5).next() =', m2.next());
+// // // console.log('m1.genMethod(5).next() =', m2.next());
 // //
-// можно возвращать не просто значение а иттерируемый объект - yeld*
-// function* genFn() {
+// // function* counter(begin, end, delta) {
+// //     let value = begin;
+// //     while (end > value) {
+// //         value += delta;
+// //         console.log({valueBefore: value });
+// //         const back = yield value;
+// //         console.log({backBefore: back });
+// //         if (back) value += back;
+// //         console.log({value, back });
+// //     }
+// // }
+// //
+// // const c = counter(0, 30, 12);
+// // const val1 = c.next();
+// // const val2 = c.next();
+// // const val3 = c.next(150);
+// // const val4 = c.next();
+// // // console.log({ c, val1, val2, val3, val4 });
+//
+//можно возвращать не просто значение а иттерируемый объект - yeld*
+// function* genFnWithArray() {
 //     yield* [10, 20, 30];
 //     //yield* new Set([10, 20, 30]);
 // }
 //
-// const c = genFn();
-// const val1 = c.next();
-// const val2 = c.next();
-// const val3 = c.next();
-// const val4 = c.next();
-// console.log({ c, val1, val2, val3, val4 });
-// // //
-// // // // можно возвращать сам генератор
-// // // function* gen1() {
-// // //     yield 10;
-// // //     yield 20;
-// // //     yield 30;
-// // // }
-// // //
-// // // function* gen2() {
-// // //     yield 40;
-// // //     yield 50;
-// // //     yield 60;
-// // // }
-// // //
-// // // function* genFn() {
-// // //     yield* gen1();
-// // //     yield* gen2();
-// // // }
-// // // // тупо склейка
-// // // console.log('[...genFn()] =', [...genFn()]);
-// // //
-// // // // можно возврвщать  значение в генератор и  с помощью  return
-// function* genFn() {
+// const iteratorOfGenFnWithArray = genFnWithArray();
+// const val1 = iteratorOfGenFnWithArray.next();
+// const val2 = iteratorOfGenFnWithArray.next();
+// const val3 = iteratorOfGenFnWithArray.next();
+// const val4 = iteratorOfGenFnWithArray.next();
+// console.log({ iteratorOfGenFnWithArray, val1, val2, val3, val4 });
+// //
+// // // можно возвращать сам генератор
+// // function* gen1() {
+// //     yield 10;
+// //     yield 20;
+// //     yield 30;
+// // }
+// //
+// // function* gen2() {
+// //     yield 40;
+// //     yield 50;
+// //     yield 60;
+// // }
+// //
+// // function* genFn() {
+// //     yield* gen1();
+// //     yield* gen2();
+// // }
+// // // тупо склейка
+// // console.log('[...genFn()] =', [...genFn()]);
+// //
+// // // можно возврвщать  значение в генератор и  с помощью  return
+// function* genFn1() {
 //     yield 10;
 //     yield 20;
 //     yield 30;
 // }
 // {
-//     const g = genFn();
+//     const g = genFn1();
 //     const val1 = g.next();
 //     const val2 = g.next();
 //     const val3 = g.next();
@@ -371,18 +375,18 @@
 // }
 //
 // {
-//     const g = genFn();
+//     const g = genFn1();
 //     const val1 = g.next();
 //     const val2 = g.return(40);
 //     const val3 = g.next();
 //     const val4 = g.return(50);
 //     console.log({ val1, val2, val3, val4 });
 // }
+//
 // //
-// // //
+//
 // //
-// // //
-function* genFn() {
+function* genFnLast() {
     try {
         yield 10;
     } catch (err) {
@@ -932,13 +936,25 @@ function* genFn() {
 //
 // console.log(l);
 
- const getFormattedIdsForDeletingGames = (ids: string[]): object => {
-    logger.info(ids)
-    return ids.reduce((acc, elm, index) => {
-        acc[`where[id][in][${index}]`] = elm;
-        return acc;
-    }, {})
-}
+//  const getFormattedIdsForDeletingGames = (ids: string[]): object => {
+//     logger.info(ids)
+//     return ids.reduce((acc, elm, index) => {
+//         acc[`where[id][in][${index}]`] = elm;
+//         return acc;
+//     }, {})
+// }
+//
+// const g = getFormattedIdsForDeletingGames(['ghjkk', 'yuyui', 'tyjjm'])
+// console.log(g)
 
-const g = getFormattedIdsForDeletingGames(['ghjkk', 'yuyui', 'tyjjm'])
-console.log(g)
+ function* mainSaga(nameToken) {
+    const dispatchedNameToken = yield nameToken;
+    yield take('hjj');
+
+ }
+
+ async function* take(fn, args) {
+    yield fn(args);
+ }
+
+ async
