@@ -134,3 +134,41 @@
  * Противоположность all - выводит ТОЛЬКО первый зарезолвленный, даже сесли перед ним куча реджекнулись.
  * А если нет зарезолвленных? Тогда все таки попадет в catch и выведет либо Error либо Agregate error
  */
+
+console.log(1)
+
+new Promise((res, req) => {
+    res(console.log(2))
+    setTimeout(() => {
+        console.log(4)
+    }, 1000)
+})
+
+setTimeout(() => {
+    console.log(3)
+}, 1000)
+
+new Promise((res, req) => {
+    res(console.log(5))
+    setTimeout(() => {
+        console.log(6)
+    }, 1000)
+})
+
+function solution(inputArray) {
+
+    let indexOfMinimum = 0;
+    let indexOfMaximum = 0;
+
+    for (let i = 1; i < inputArray.length; i++) {
+        if (inputArray[i] < inputArray[indexOfMinimum]) {
+            indexOfMinimum = i;
+        }
+        if (inputArray[i] > inputArray[indexOfMaximum]) {
+            indexOfMaximum = i;
+        }
+    }
+    return inputArray[indexOfMaximum] - inputArray[indexOfMinimum];
+}
+
+console.log(solution([1, 4, 10, 4, 2]))

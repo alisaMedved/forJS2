@@ -343,3 +343,22 @@ console.log('numForSeal ', numForSeal)
 numForSeal = 45
 console.log('numForSeal ', numForSeal)
 
+const ott = {
+    set current(str) {
+        this.log = str;
+    },
+    get current() {
+        return this.log;
+    },
+    log: 6,
+};
+
+Object.freeze(ott);
+
+console.log(ott.current);
+console.log(ott.log);
+
+ott.current = 8;
+console.log(ott.current);
+
+
